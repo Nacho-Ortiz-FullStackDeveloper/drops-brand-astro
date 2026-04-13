@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import { Image } from 'astro:assets';
+import tee from '../../assets/images/tee.png';
+---
+
+<Layout>
+  <Navbar />
+
+  <section class="min-h-screen bg-black text-white px-6 py-32">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      
+      <!-- Imagen -->
+      <div class="w-full flex justify-center">
+        <div class="w-full max-w-md overflow-hidden border border-gray-800">
+          <Image
+            src={tee}
+            alt="Tee NEO.NAUTZ"
+            width={800}
+            height={1000}
+            class="w-full h-[520px] object-cover"
+          />
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="flex flex-col gap-6">
+        <p class="text-xs tracking-[0.3em] text-gray-500">
+          NEO.NAUTZ / DROP 01
+        </p>
+
+        <h1 class="text-4xl md:text-6xl font-bold tracking-widest">
+          TEE V1
+        </h1>
+
+        <p class="text-2xl text-gray-300">
+          €60
+        </p>
+
+        <p class="text-sm leading-7 text-gray-400 max-w-xl">
+          Black graphic tee with a bold front print and dark rave energy.
+          Built to feel aggressive, underground and visually heavy.
+        </p>
+
+        <div class="flex gap-3 pt-2">
+          <button class="border border-white px-6 py-3 text-sm tracking-widest hover:bg-white hover:text-black transition">
+            ADD TO CART
+          </button>
+
+          <a href="/" class="border border-gray-700 px-6 py-3 text-sm tracking-widest text-gray-300 hover:border-white hover:text-white transition">
+            BACK
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</Layout>

@@ -1,55 +1,98 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
-import { Image } from 'astro:assets';
+import ProductCard from '../components/ProductCard.astro';
+import BehindTheDrop from '../components/BehindTheDrop.astro';
 
 import hoodie from '../assets/images/hoodie.png';
 import tee from '../assets/images/tee.png';
 import cap from '../assets/images/cap.png';
+
+/* CAMPAIGN IMAGES */
+import campaign01 from '../assets/campaign/drop-01.png';
+import campaign02 from '../assets/campaign/drop-02.png';
+import campaign03 from '../assets/campaign/drop-03.png';
+import campaign04 from '../assets/campaign/drop-04.png';
+import campaign05 from '../assets/campaign/drop-05.png';
+import campaign06 from '../assets/campaign/drop-06.png';
+import campaign07 from '../assets/campaign/drop-07.png';
+import campaign08 from '../assets/campaign/drop-08.png';
+import campaign09 from '../assets/campaign/drop-09.png';
 ---
 
 <Layout>
   <Navbar />
 
-  <section class="h-screen bg-black flex flex-col items-center justify-center text-white gap-6">
-    <h1 class="text-6xl md:text-8xl font-bold tracking-widest hover:tracking-[0.2em] transition-all duration-500">
-      NEO.NAUTZ
-    </h1>
+  <!-- HERO -->
+  <section class="h-screen bg-black flex flex-col items-center justify-center text-white px-6">
+    <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
 
-    <p class="text-sm tracking-[0.3em] text-gray-400">
-      EXCLUSIVE DROPS
-    </p>
+      <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-[0.12em] uppercase leading-none hover:tracking-[0.18em] transition-all duration-500">
+        NEO.NAUTZ
+      </h1>
 
-    <a
-      href="#drop"
-      class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105"
-    >
-      SHOP
-    </a>
+      <p class="mt-8 text-base md:text-xl uppercase tracking-[0.45em] text-zinc-300">
+        Exclusive Drops
+      </p>
 
-    <p id="countdown" class="text-xs text-gray-500 mt-6 tracking-widest"></p>
+      <a
+        href="#drop"
+        class="mt-10 inline-flex items-center justify-center border border-white px-8 py-4 text-sm md:text-base uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black hover:scale-105"
+      >
+        Shop
+      </a>
 
-    <script>
+      <div class="mt-12 flex flex-col items-center gap-4">
+
+        <p
+          id="countdown"
+          class="text-base md:text-xl font-medium uppercase tracking-[0.22em] text-white"
+        ></p>
+
+        <p
+          id="local-drop-time"
+          class="text-xs md:text-sm uppercase tracking-[0.28em] text-zinc-500"
+        ></p>
+
+      </div>
+
+    </div>
+
+    <script is:inline>
       const countdown = document.getElementById("countdown");
+      const localDropTime = document.getElementById("local-drop-time");
 
-      const dropDate = new Date();
-      dropDate.setHours(dropDate.getHours() + 48);
+      const DROP_DATE = "2026-07-21T20:00:00+02:00";
+      const dropDate = new Date(DROP_DATE);
+
+      if (localDropTime) {
+        const formattedLocalTime = new Intl.DateTimeFormat(undefined, {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(dropDate);
+
+        localDropTime.textContent = `Your local drop time: ${formattedLocalTime}`;
+      }
 
       function updateCountdown() {
         const now = new Date();
-        const diff = dropDate - now;
+        const diff = dropDate.getTime() - now.getTime();
 
         if (diff <= 0) {
-          if (countdown) countdown.innerText = "DROP LIVE";
+          if (countdown) countdown.textContent = "Drop Live";
           return;
         }
 
-        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
 
         if (countdown) {
-          countdown.innerText = `NEXT DROP IN ${hours}H ${minutes}M ${seconds}S`;
+          countdown.textContent = `Next drop in ${days}d ${hours}h ${minutes}m ${seconds}s`;
         }
       }
 
@@ -58,80 +101,59 @@ import cap from '../assets/images/cap.png';
     </script>
   </section>
 
-  <section id="drop" class="bg-black text-white py-20 px-6">
-    <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 tracking-widest">
-      LATEST DROP
-    </h2>
+  <!-- BEHIND THE DROP -->
+  <BehindTheDrop
+    title="BEHIND THE DROP"
+    subtitle="Campaign visuals from the current release."
+    images={[
+      { image: campaign01, alt: 'Campaign shot 1' },
+      { image: campaign02, alt: 'Campaign shot 2' },
+      { image: campaign03, alt: 'Campaign shot 3' },
+      { image: campaign04, alt: 'Campaign shot 4' },
+      { image: campaign05, alt: 'Campaign shot 5' },
+      { image: campaign06, alt: 'Campaign shot 6' },
+      { image: campaign07, alt: 'Campaign shot 7' },
+      { image: campaign08, alt: 'Campaign shot 8' },
+      { image: campaign09, alt: 'Campaign shot 9' },
+    ]}
+  />
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-      <article class="group relative">
-        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-          <Image
-            src={hoodie}
-            alt="Hoodie NEO.NAUTZ"
-            width={800}
-            height={1000}
-            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+  <!-- DROP -->
+  <section id="drop" class="bg-black text-white py-24 px-6">
+    <div class="max-w-6xl mx-auto">
 
-          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
-              VIEW PRODUCT
-            </button>
-          </div>
-        </div>
+      <h2 class="text-3xl md:text-5xl font-bold text-center uppercase tracking-[0.18em] mb-16">
+        Latest Drop
+      </h2>
 
-        <div class="mt-4 flex items-center justify-between">
-          <h3 class="text-sm md:text-base tracking-[0.25em]">HOODIE V1</h3>
-          <p class="text-sm text-gray-400">€120</p>
-        </div>
-      </article>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-      <article class="group relative">
-        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-          <Image
-            src={tee}
-            alt="Tee NEO.NAUTZ"
-            width={800}
-            height={1000}
-            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+        <ProductCard
+          image={hoodie}
+          alt="Hoodie NEO.NAUTZ"
+          name="HOODIE V1"
+          price="€120"
+          href="/product/hoodie-v1"
+        />
 
-          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
-              VIEW PRODUCT
-            </button>
-          </div>
-        </div>
+        <ProductCard
+          image={tee}
+          alt="Tee NEO.NAUTZ"
+          name="TEE V1"
+          price="€60"
+          href="/product/tee-v1"
+        />
 
-        <div class="mt-4 flex items-center justify-between">
-          <h3 class="text-sm md:text-base tracking-[0.25em]">TEE V1</h3>
-          <p class="text-sm text-gray-400">€60</p>
-        </div>
-      </article>
+        <ProductCard
+          image={cap}
+          alt="Cap NEO.NAUTZ"
+          name="CAP V1"
+          price="€40"
+          href="/product/cap-v1"
+        />
 
-      <article class="group relative">
-        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-          <Image
-            src={cap}
-            alt="Cap NEO.NAUTZ"
-            width={800}
-            height={1000}
-            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-
-          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
-              VIEW PRODUCT
-            </button>
-          </div>
-        </div>
-
-        <div class="mt-4 flex items-center justify-between">
-          <h3 class="text-sm md:text-base tracking-[0.25em]">CAP V1</h3>
-          <p class="text-sm text-gray-400">€40</p>
-        </div>
-      </article>
+      </div>
     </div>
   </section>
+
 </Layout>
