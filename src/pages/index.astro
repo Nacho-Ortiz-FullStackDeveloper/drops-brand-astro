@@ -6,7 +6,8 @@ import Navbar from '../components/Navbar.astro';
 <Layout>
   <Navbar />
 
-  <section class="h-screen bg-black flex flex-col items-center justify-center text-white gap-6 animate-fade">
+  <!-- HERO -->
+  <section class="h-screen bg-black flex flex-col items-center justify-center text-white gap-6">
     <h1 class="text-6xl md:text-8xl font-bold tracking-widest hover:tracking-[0.2em] transition-all duration-500">
       NEO.NAUTZ
     </h1>
@@ -15,9 +16,9 @@ import Navbar from '../components/Navbar.astro';
       EXCLUSIVE DROPS
     </p>
 
-    <button class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105">
-      ENTER STORE
-    </button>
+    <a href="#drop" class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105">
+      SHOP
+    </a>
 
     <p id="countdown" class="text-xs text-gray-500 mt-6 tracking-widest"></p>
 
@@ -49,4 +50,84 @@ import Navbar from '../components/Navbar.astro';
       setInterval(updateCountdown, 1000);
     </script>
   </section>
+
+  <!-- DROP -->
+  <section id="drop" class="bg-black text-white py-20 px-6">
+    <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 tracking-widest">
+      LATEST DROP
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+
+      <!-- PRODUCTO 1 -->
+      <article class="group relative">
+        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
+
+          <!-- Imagen (placeholder) -->
+          <div class="h-80 bg-zinc-900 flex items-center justify-center text-zinc-600 tracking-[0.3em]">
+            HOODIE
+          </div>
+
+          <!-- Overlay -->
+          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
+              VIEW PRODUCT
+            </button>
+          </div>
+
+        </div>
+
+        <div class="mt-4 flex items-center justify-between">
+          <h3 class="text-sm md:text-base tracking-[0.25em]">HOODIE V1</h3>
+          <p class="text-sm text-gray-400">€120</p>
+        </div>
+      </article>
+
+      <!-- PRODUCTO 2 -->
+      <article class="group relative">
+        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
+
+          <div class="h-80 bg-zinc-900 flex items-center justify-center text-zinc-600 tracking-[0.3em]">
+            TEE
+          </div>
+
+          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
+              VIEW PRODUCT
+            </button>
+          </div>
+
+        </div>
+
+        <div class="mt-4 flex items-center justify-between">
+          <h3 class="text-sm md:text-base tracking-[0.25em]">TEE V1</h3>
+          <p class="text-sm text-gray-400">€60</p>
+        </div>
+      </article>
+
+      <!-- PRODUCTO 3 -->
+      <article class="group relative">
+        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
+
+          <div class="h-80 bg-zinc-900 flex items-center justify-center text-zinc-600 tracking-[0.3em]">
+            CAP
+          </div>
+
+          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
+              VIEW PRODUCT
+            </button>
+          </div>
+
+        </div>
+
+        <div class="mt-4 flex items-center justify-between">
+          <h3 class="text-sm md:text-base tracking-[0.25em]">CAP V1</h3>
+          <p class="text-sm text-gray-400">€40</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
 </Layout>
