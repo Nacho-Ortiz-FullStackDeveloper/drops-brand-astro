@@ -14,7 +14,10 @@ Modern streetwear landing page built with Astro and Tailwind CSS.
 - JavaScript
 
 ## 📸 Preview
-(Add screenshots here)
+![Home](home.png)
+![Products](shop.png)
+![Product Detail](detail.png)
+![VIP Section](vip.png)
 
 ## 🌐 Live Demo
 (Add link here)
