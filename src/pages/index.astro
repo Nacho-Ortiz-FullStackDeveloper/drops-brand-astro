@@ -1,9 +1,52 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
 ---
 
 <Layout>
-  <h1 class="text-5xl text-white bg-black h-screen flex items-center justify-center">
-    NEO.NAUTZ
-  </h1>
+  <Navbar />
+
+  <section class="h-screen bg-black flex flex-col items-center justify-center text-white gap-6 animate-fade">
+    <h1 class="text-6xl md:text-8xl font-bold tracking-widest hover:tracking-[0.2em] transition-all duration-500">
+      NEO.NAUTZ
+    </h1>
+
+    <p class="text-sm tracking-[0.3em] text-gray-400">
+      EXCLUSIVE DROPS
+    </p>
+
+    <button class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105">
+      ENTER STORE
+    </button>
+
+    <p id="countdown" class="text-xs text-gray-500 mt-6 tracking-widest"></p>
+
+    <script>
+      const countdown = document.getElementById("countdown");
+
+      const dropDate = new Date();
+      dropDate.setHours(dropDate.getHours() + 48);
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = dropDate - now;
+
+        if (diff <= 0) {
+          if (countdown) countdown.innerText = "DROP LIVE";
+          return;
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        if (countdown) {
+          countdown.innerText = `NEXT DROP IN ${hours}H ${minutes}M ${seconds}S`;
+        }
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    </script>
+  </section>
 </Layout>
