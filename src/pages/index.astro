@@ -11,45 +11,79 @@ import cap from '../assets/images/cap.png';
 <Layout>
   <Navbar />
 
-  <section class="h-screen bg-black flex flex-col items-center justify-center text-white gap-6">
-    <h1 class="text-6xl md:text-8xl font-bold tracking-widest hover:tracking-[0.2em] transition-all duration-500">
-      NEO.NAUTZ
-    </h1>
+  <section class="h-screen bg-black flex flex-col items-center justify-center text-white px-6">
+    <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+      <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-[0.12em] uppercase leading-none hover:tracking-[0.18em] transition-all duration-500">
+        NEO.NAUTZ
+      </h1>
 
-    <p class="text-sm tracking-[0.3em] text-gray-400">
-      EXCLUSIVE DROPS
-    </p>
+      <p class="mt-8 text-base md:text-xl uppercase tracking-[0.45em] text-zinc-300">
+        Exclusive Drops
+      </p>
 
-    <a
-      href="#drop"
-      class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105"
-    >
-      SHOP
-    </a>
+      <a
+        href="#drop"
+        class="mt-10 inline-flex items-center justify-center border border-white px-8 py-4 text-sm md:text-base uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black hover:scale-105"
+      >
+        Shop
+      </a>
 
-    <p id="countdown" class="text-xs text-gray-500 mt-6 tracking-widest"></p>
+      <div class="mt-12 flex flex-col items-center gap-4">
+        <p
+          id="countdown"
+          class="text-base md:text-xl font-medium uppercase tracking-[0.22em] text-white"
+        ></p>
 
-    <script>
+        <p
+          id="local-drop-time"
+          class="text-xs md:text-sm uppercase tracking-[0.28em] text-zinc-500"
+        ></p>
+      </div>
+    </div>
+
+    <script is:inline>
       const countdown = document.getElementById("countdown");
+      const localDropTime = document.getElementById("local-drop-time");
 
-      const dropDate = new Date();
-      dropDate.setHours(dropDate.getHours() + 48);
+      // ==================================================
+      // FECHA DEL DROP
+      // CAMBIA SOLO ESTA LÍNEA
+      // Formato: YYYY-MM-DDTHH:mm:ss+zonaHoraria
+      // España verano: +02:00
+      // España invierno: +01:00
+      // ==================================================
+      const DROP_DATE = "2026-07-21T20:00:00+02:00";
+
+      const dropDate = new Date(DROP_DATE);
+
+      if (localDropTime) {
+        const formattedLocalTime = new Intl.DateTimeFormat(undefined, {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(dropDate);
+
+        localDropTime.textContent = `Your local drop time: ${formattedLocalTime}`;
+      }
 
       function updateCountdown() {
         const now = new Date();
-        const diff = dropDate - now;
+        const diff = dropDate.getTime() - now.getTime();
 
         if (diff <= 0) {
-          if (countdown) countdown.innerText = "DROP LIVE";
+          if (countdown) countdown.textContent = "Drop Live";
           return;
         }
 
-        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
 
         if (countdown) {
-          countdown.innerText = `NEXT DROP IN ${hours}H ${minutes}M ${seconds}S`;
+          countdown.textContent = `Next drop in ${days}d ${hours}h ${minutes}m ${seconds}s`;
         }
       }
 
@@ -58,35 +92,37 @@ import cap from '../assets/images/cap.png';
     </script>
   </section>
 
-  <section id="drop" class="bg-black text-white py-20 px-6">
-    <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 tracking-widest">
-      LATEST DROP
-    </h2>
+  <section id="drop" class="bg-black text-white py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-5xl font-bold text-center uppercase tracking-[0.18em] mb-16">
+        Latest Drop
+      </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-      <ProductCard
-        image={hoodie}
-        alt="Hoodie NEO.NAUTZ"
-        name="HOODIE V1"
-        price="€120"
-        href="/product/hoodie-v1"
-      />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <ProductCard
+          image={hoodie}
+          alt="Hoodie NEO.NAUTZ"
+          name="HOODIE V1"
+          price="€120"
+          href="/product/hoodie-v1"
+        />
 
-      <ProductCard
-        image={tee}
-        alt="Tee NEO.NAUTZ"
-        name="TEE V1"
-        price="€60"
-        href="/product/tee-v1"
-      />
+        <ProductCard
+          image={tee}
+          alt="Tee NEO.NAUTZ"
+          name="TEE V1"
+          price="€60"
+          href="/product/tee-v1"
+        />
 
-      <ProductCard
-        image={cap}
-        alt="Cap NEO.NAUTZ"
-        name="CAP V1"
-        price="€40"
-        href="/product/cap-v1"
-      />
+        <ProductCard
+          image={cap}
+          alt="Cap NEO.NAUTZ"
+          name="CAP V1"
+          price="€40"
+          href="/product/cap-v1"
+        />
+      </div>
     </div>
   </section>
 </Layout>
