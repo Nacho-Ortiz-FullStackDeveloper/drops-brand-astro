@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import { Image } from 'astro:assets';
+import hoodie from '../../assets/images/hoodie.png';
+---
+
+<Layout>
+  <Navbar />
+
+  <section class="min-h-screen bg-black text-white px-6 pt-32 pb-24">
+    <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
+      <p class="text-[11px] uppercase tracking-[0.35em] text-zinc-500">
+        Neo.Nautz / Drop 01
+      </p>
+
+      <h1 class="mt-4 text-3xl font-bold uppercase tracking-[0.18em] md:text-5xl">
+        Hoodie V1
+      </h1>
+
+      <p class="mt-4 text-xl text-zinc-200 md:text-2xl">
+        €120
+      </p>
+
+      <div class="mt-10 flex w-full justify-center">
+        <div
+          class="overflow-hidden border border-zinc-800 bg-zinc-950/40 p-3"
+          style="width: 280px;"
+        >
+          <Image
+            src={hoodie}
+            alt="Hoodie NEO.NAUTZ"
+            width={900}
+            height={1200}
+            class="block w-full"
+            style="height: 280px; object-fit: contain;"
+          />
+        </div>
+      </div>
+
+      <p class="mt-10 max-w-xl text-sm leading-7 text-zinc-400">
+        Oversized black hoodie with dark rave-inspired graphics and underground graffiti energy.
+        Built for a heavy streetwear silhouette with a stronger visual identity.
+      </p>
+
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <button class="border border-white px-6 py-3 text-xs uppercase tracking-[0.28em] transition hover:bg-white hover:text-black">
+          Add to cart
+        </button>
+
+        <a
+          href="/"
+          class="border border-zinc-700 px-6 py-3 text-xs uppercase tracking-[0.28em] text-zinc-300 transition hover:border-white hover:text-white"
+        >
+          Back
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

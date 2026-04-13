@@ -6,30 +6,33 @@ interface Props {
   alt: string;
   name: string;
   price: string;
+  href: string;
 }
 
-const { image, alt, name, price } = Astro.props;
+const { image, alt, name, price, href } = Astro.props;
 ---
 
 <article class="group relative">
-  <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-    <Image
-      src={image}
-      alt={alt}
-      width={800}
-      height={1000}
-      class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
-    />
+  <a href={href} class="block">
+    <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
+      <Image
+        src={image}
+        alt={alt}
+        width={800}
+        height={1000}
+        class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
+      />
 
-    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-      <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
-        VIEW PRODUCT
-      </button>
+      <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+        <span class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
+          VIEW PRODUCT
+        </span>
+      </div>
     </div>
-  </div>
 
-  <div class="mt-4 flex items-center justify-between">
-    <h3 class="text-sm md:text-base tracking-[0.25em]">{name}</h3>
-    <p class="text-sm text-gray-400">{price}</p>
-  </div>
+    <div class="mt-4 flex items-center justify-between">
+      <h3 class="text-sm md:text-base tracking-[0.25em]">{name}</h3>
+      <p class="text-sm text-gray-400">{price}</p>
+    </div>
+  </a>
 </article>
