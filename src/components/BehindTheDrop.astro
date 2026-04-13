@@ -1,0 +1,146 @@
+---
+import { Image } from 'astro:assets';
+
+interface SlideImage {
+  image: ImageMetadata;
+  alt: string;
+}
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  images?: SlideImage[];
+}
+
+const {
+  title = 'BEHIND THE DROP',
+  subtitle = 'Campaign visuals from the current release.',
+  images = [],
+} = Astro.props as Props;
+
+const groups: SlideImage[][] = [];
+for (let i = 0; i < images.length; i += 3) {
+  groups.push(images.slice(i, i + 3));
+}
+
+const totalSlides = groups.length;
+---
+
+<section class="bg-black text-white px-6 py-24">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <p class="text-xs md:text-sm uppercase tracking-[0.35em] text-zinc-500">
+        {title}
+      </p>
+
+      <h2 class="mt-4 text-3xl md:text-5xl font-bold uppercase tracking-[0.18em]">
+        {subtitle}
+      </h2>
+    </div>
+
+    <div class="relative">
+      <div class="overflow-hidden">
+        <div
+          id="behind-inner"
+          class="flex transition-transform duration-700 ease-in-out"
+          style={`width: ${totalSlides * 100}%`}
+        >
+          {groups.map((group) => (
+            <div
+              class="w-full shrink-0"
+              style={`width: ${100 / totalSlides}%`}
+            >
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {group.map((item) => (
+                  <div class="group overflow-hidden border border-white/10 bg-zinc-950">
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      width={1200}
+                      height={1600}
+                      class="w-full h-[460px] md:h-[620px] object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {totalSlides > 1 && (
+        <div class="mt-10 flex items-center justify-center gap-4">
+          <button
+            id="behind-prev"
+            class="border border-white/20 px-4 py-3 text-xs uppercase tracking-[0.3em] text-white transition hover:border-white hover:bg-white hover:text-black"
+            aria-label="Previous campaign images"
+          >
+            Prev
+          </button>
+
+          <div class="flex justify-center gap-3">
+            {groups.map((_, index) => (
+              <button
+                class={`behind-dot h-2 w-2 rounded-full transition ${
+                  index === 0 ? 'bg-white' : 'bg-white/20'
+                }`}
+                data-index={index}
+                aria-label={`Go to slide ${index + 1}`}
+              ></button>
+            ))}
+          </div>
+
+          <button
+            id="behind-next"
+            class="border border-white/20 px-4 py-3 text-xs uppercase tracking-[0.3em] text-white transition hover:border-white hover:bg-white hover:text-black"
+            aria-label="Next campaign images"
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ totalSlides }}>
+    const track = document.getElementById('behind-inner');
+    const prevBtn = document.getElementById('behind-prev');
+    const nextBtn = document.getElementById('behind-next');
+    const dots = Array.from(document.querySelectorAll('.behind-dot'));
+
+    if (track && totalSlides > 1) {
+      let current = 0;
+
+      const updateSlider = () => {
+        track.style.transform = `translateX(-${current * (100 / totalSlides)}%)`;
+
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('bg-white', index === current);
+          dot.classList.toggle('bg-white/20', index !== current);
+        });
+      };
+
+      prevBtn?.addEventListener('click', () => {
+        current = current === 0 ? totalSlides - 1 : current - 1;
+        updateSlider();
+      });
+
+      nextBtn?.addEventListener('click', () => {
+        current = current === totalSlides - 1 ? 0 : current + 1;
+        updateSlider();
+      });
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          current = index;
+          updateSlider();
+        });
+      });
+
+      setInterval(() => {
+        current = current === totalSlides - 1 ? 0 : current + 1;
+        updateSlider();
+      }, 5000);
+    }
+  </script>
+</section>

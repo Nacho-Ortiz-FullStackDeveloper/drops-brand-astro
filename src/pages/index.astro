@@ -2,17 +2,31 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import ProductCard from '../components/ProductCard.astro';
+import BehindTheDrop from '../components/BehindTheDrop.astro';
 
 import hoodie from '../assets/images/hoodie.png';
 import tee from '../assets/images/tee.png';
 import cap from '../assets/images/cap.png';
+
+/* CAMPAIGN IMAGES */
+import campaign01 from '../assets/campaign/drop-01.png';
+import campaign02 from '../assets/campaign/drop-02.png';
+import campaign03 from '../assets/campaign/drop-03.png';
+import campaign04 from '../assets/campaign/drop-04.png';
+import campaign05 from '../assets/campaign/drop-05.png';
+import campaign06 from '../assets/campaign/drop-06.png';
+import campaign07 from '../assets/campaign/drop-07.png';
+import campaign08 from '../assets/campaign/drop-08.png';
+import campaign09 from '../assets/campaign/drop-09.png';
 ---
 
 <Layout>
   <Navbar />
 
+  <!-- HERO -->
   <section class="h-screen bg-black flex flex-col items-center justify-center text-white px-6">
     <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+
       <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-[0.12em] uppercase leading-none hover:tracking-[0.18em] transition-all duration-500">
         NEO.NAUTZ
       </h1>
@@ -29,6 +43,7 @@ import cap from '../assets/images/cap.png';
       </a>
 
       <div class="mt-12 flex flex-col items-center gap-4">
+
         <p
           id="countdown"
           class="text-base md:text-xl font-medium uppercase tracking-[0.22em] text-white"
@@ -38,22 +53,16 @@ import cap from '../assets/images/cap.png';
           id="local-drop-time"
           class="text-xs md:text-sm uppercase tracking-[0.28em] text-zinc-500"
         ></p>
+
       </div>
+
     </div>
 
     <script is:inline>
       const countdown = document.getElementById("countdown");
       const localDropTime = document.getElementById("local-drop-time");
 
-      // ==================================================
-      // FECHA DEL DROP
-      // CAMBIA SOLO ESTA LÍNEA
-      // Formato: YYYY-MM-DDTHH:mm:ss+zonaHoraria
-      // España verano: +02:00
-      // España invierno: +01:00
-      // ==================================================
       const DROP_DATE = "2026-07-21T20:00:00+02:00";
-
       const dropDate = new Date(DROP_DATE);
 
       if (localDropTime) {
@@ -92,13 +101,33 @@ import cap from '../assets/images/cap.png';
     </script>
   </section>
 
+  <!-- BEHIND THE DROP -->
+  <BehindTheDrop
+    title="BEHIND THE DROP"
+    subtitle="Campaign visuals from the current release."
+    images={[
+      { image: campaign01, alt: 'Campaign shot 1' },
+      { image: campaign02, alt: 'Campaign shot 2' },
+      { image: campaign03, alt: 'Campaign shot 3' },
+      { image: campaign04, alt: 'Campaign shot 4' },
+      { image: campaign05, alt: 'Campaign shot 5' },
+      { image: campaign06, alt: 'Campaign shot 6' },
+      { image: campaign07, alt: 'Campaign shot 7' },
+      { image: campaign08, alt: 'Campaign shot 8' },
+      { image: campaign09, alt: 'Campaign shot 9' },
+    ]}
+  />
+
+  <!-- DROP -->
   <section id="drop" class="bg-black text-white py-24 px-6">
     <div class="max-w-6xl mx-auto">
+
       <h2 class="text-3xl md:text-5xl font-bold text-center uppercase tracking-[0.18em] mb-16">
         Latest Drop
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
         <ProductCard
           image={hoodie}
           alt="Hoodie NEO.NAUTZ"
@@ -122,7 +151,9 @@ import cap from '../assets/images/cap.png';
           price="€40"
           href="/product/cap-v1"
         />
+
       </div>
     </div>
   </section>
+
 </Layout>
