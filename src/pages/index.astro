@@ -26,7 +26,6 @@ import campaign09 from '../assets/campaign/drop-09.png';
   <!-- HERO -->
   <section class="h-screen bg-black flex flex-col items-center justify-center text-white px-6">
     <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
-
       <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-[0.12em] uppercase leading-none hover:tracking-[0.18em] transition-all duration-500">
         NEO.NAUTZ
       </h1>
@@ -43,7 +42,6 @@ import campaign09 from '../assets/campaign/drop-09.png';
       </a>
 
       <div class="mt-12 flex flex-col items-center gap-4">
-
         <p
           id="countdown"
           class="text-base md:text-xl font-medium uppercase tracking-[0.22em] text-white"
@@ -54,8 +52,13 @@ import campaign09 from '../assets/campaign/drop-09.png';
           class="text-xs md:text-sm uppercase tracking-[0.28em] text-zinc-500"
         ></p>
 
+        <a
+          href="/vip"
+          class="mt-4 inline-flex items-center justify-center border border-white px-8 py-4 text-sm md:text-base uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black hover:scale-105"
+        >
+          Vip
+        </a>
       </div>
-
     </div>
 
     <script is:inline>
@@ -121,13 +124,11 @@ import campaign09 from '../assets/campaign/drop-09.png';
   <!-- DROP -->
   <section id="drop" class="bg-black text-white py-24 px-6">
     <div class="max-w-6xl mx-auto">
-
       <h2 class="text-3xl md:text-5xl font-bold text-center uppercase tracking-[0.18em] mb-16">
         Latest Drop
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-
         <ProductCard
           image={hoodie}
           alt="Hoodie NEO.NAUTZ"
@@ -151,9 +152,7 @@ import campaign09 from '../assets/campaign/drop-09.png';
           price="€40"
           href="/product/cap-v1"
         />
-
       </div>
     </div>
   </section>
-
 </Layout>

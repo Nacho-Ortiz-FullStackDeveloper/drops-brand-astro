@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+
+/*
+  CAMBIA SOLO ESTAS 2 LÍNEAS CUANDO TENGAS LOS DATOS REALES
+  - VIP_EMAIL: correo real del cliente
+  - VIP_WHATSAPP: número completo con prefijo país, sin espacios ni símbolos
+    Ejemplo España: 34600111222
+*/
+const VIP_EMAIL = 'vip@neonautz.com';
+const VIP_WHATSAPP = '34600000000';
+
+const emailSubject = encodeURIComponent('VIP ACCESS REQUEST');
+const emailBody = encodeURIComponent(
+  `Hello Neo.Nautz,
+
+I want VIP access for the next drop.
+
+Name:
+Country:
+Interested product:
+Preferred size:
+
+Thank you.`
+);
+
+const whatsappMessage = encodeURIComponent(
+  `Hello Neo.Nautz, I want VIP access for the next drop.
+
+Name:
+Country:
+Interested product:
+Preferred size:`
+);
+---
+
+<Layout>
+  <Navbar />
+
+  <section class="min-h-screen bg-black text-white px-6 pt-16 md:pt-20 pb-24 flex items-center">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-xs md:text-sm uppercase tracking-[0.35em] text-zinc-500">
+        Neo.Nautz Vip Access
+      </p>
+
+      <h1 class="mt-6 text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-[0.14em] leading-tight">
+        Early Access For The Next Drop
+      </h1>
+
+      <p class="mt-8 max-w-2xl mx-auto text-sm md:text-base leading-8 text-zinc-400">
+        Vip access is reserved for people who want priority contact, early access to selected drops
+        and direct communication with the brand before public release.
+      </p>
+
+      <div class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+        <div class="border border-white/10 p-8 bg-zinc-950/30">
+          <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
+            Email Contact
+          </p>
+
+          <h2 class="mt-4 text-2xl md:text-3xl font-bold uppercase tracking-[0.12em]">
+            Request By Email
+          </h2>
+
+          <p class="mt-4 text-sm leading-7 text-zinc-400">
+            Send your name, country, product interest and preferred size to receive manual support
+            and availability details.
+          </p>
+
+          <a
+            href={`mailto:${VIP_EMAIL}?subject=${emailSubject}&body=${emailBody}`}
+            class="mt-8 inline-flex items-center justify-center border border-white px-6 py-3 text-xs md:text-sm uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black"
+          >
+            Email Vip
+          </a>
+        </div>
+
+        <div class="border border-white/10 p-8 bg-zinc-950/30">
+          <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
+            WhatsApp Contact
+          </p>
+
+          <h2 class="mt-4 text-2xl md:text-3xl font-bold uppercase tracking-[0.12em]">
+            Request By WhatsApp
+          </h2>
+
+          <p class="mt-4 text-sm leading-7 text-zinc-400">
+            Contact the brand directly for drop information, availability and private purchase requests.
+          </p>
+
+          <a
+            href={`https://wa.me/${VIP_WHATSAPP}?text=${whatsappMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-8 inline-flex items-center justify-center border border-white px-6 py-3 text-xs md:text-sm uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black"
+          >
+            WhatsApp Vip
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-16 border-t border-white/10 pt-10">
+        <p class="text-xs uppercase tracking-[0.3em] text-zinc-600">
+          Manual order system active for the current stage of the brand
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
