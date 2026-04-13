@@ -1,50 +1,52 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
 ---
 
 <Layout>
+  <Navbar />
+
   <section class="h-screen bg-black flex flex-col items-center justify-center text-white gap-6 animate-fade">
+    <h1 class="text-6xl md:text-8xl font-bold tracking-widest hover:tracking-[0.2em] transition-all duration-500">
+      NEO.NAUTZ
+    </h1>
 
-    <!-- LOGO / MARCA -->
-  <h1 class="text-6xl md:text-8xl font-bold tracking-widest hover:tracking-[0.2em] transition-all duration-500">
-  NEO.NAUTZ
-</h1>
-
-    <!-- SUBTEXTO -->
     <p class="text-sm tracking-[0.3em] text-gray-400">
       EXCLUSIVE DROPS
     </p>
 
-    <!-- BOTÓN -->
     <button class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105">
-  ENTER STORE
-</button>
-<p id="countdown" class="text-xs text-gray-500 mt-6 tracking-widest"></p>
+      ENTER STORE
+    </button>
 
-<script>
-  const countdown = document.getElementById("countdown");
+    <p id="countdown" class="text-xs text-gray-500 mt-6 tracking-widest"></p>
 
-  const dropDate = new Date();
-  dropDate.setHours(dropDate.getHours() + 48); // 48h desde ahora
+    <script>
+      const countdown = document.getElementById("countdown");
 
-  function updateCountdown() {
-    const now = new Date();
-    const diff = dropDate - now;
+      const dropDate = new Date();
+      dropDate.setHours(dropDate.getHours() + 48);
 
-    if (diff <= 0) {
-      countdown.innerText = "DROP LIVE";
-      return;
-    }
+      function updateCountdown() {
+        const now = new Date();
+        const diff = dropDate - now;
 
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
+        if (diff <= 0) {
+          if (countdown) countdown.innerText = "DROP LIVE";
+          return;
+        }
 
-    countdown.innerText = `NEXT DROP IN ${hours}H ${minutes}M ${seconds}S`;
-  }
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
 
-  setInterval(updateCountdown, 1000);
-</script>
+        if (countdown) {
+          countdown.innerText = `NEXT DROP IN ${hours}H ${minutes}M ${seconds}S`;
+        }
+      }
 
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    </script>
   </section>
 </Layout>
