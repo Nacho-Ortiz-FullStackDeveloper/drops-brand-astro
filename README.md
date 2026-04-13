@@ -1,4 +1,4 @@
-# 🚀 Neo.Nautz – E-commerce Landing
+# 🚀 Modern streetwear DROP– E-commerce Landing
 
 Modern streetwear landing page built with **Astro** and **Tailwind CSS**, focused on clean UI, performance and drop-based product experience.
 
