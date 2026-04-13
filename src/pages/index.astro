@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
-import { Image } from 'astro:assets';
+import ProductCard from '../components/ProductCard.astro';
 
 import hoodie from '../assets/images/hoodie.png';
 import tee from '../assets/images/tee.png';
@@ -64,74 +64,26 @@ import cap from '../assets/images/cap.png';
     </h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-      <article class="group relative">
-        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-          <Image
-            src={hoodie}
-            alt="Hoodie NEO.NAUTZ"
-            width={800}
-            height={1000}
-            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+      <ProductCard
+        image={hoodie}
+        alt="Hoodie NEO.NAUTZ"
+        name="HOODIE V1"
+        price="€120"
+      />
 
-          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
-              VIEW PRODUCT
-            </button>
-          </div>
-        </div>
+      <ProductCard
+        image={tee}
+        alt="Tee NEO.NAUTZ"
+        name="TEE V1"
+        price="€60"
+      />
 
-        <div class="mt-4 flex items-center justify-between">
-          <h3 class="text-sm md:text-base tracking-[0.25em]">HOODIE V1</h3>
-          <p class="text-sm text-gray-400">€120</p>
-        </div>
-      </article>
-
-      <article class="group relative">
-        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-          <Image
-            src={tee}
-            alt="Tee NEO.NAUTZ"
-            width={800}
-            height={1000}
-            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-
-          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
-              VIEW PRODUCT
-            </button>
-          </div>
-        </div>
-
-        <div class="mt-4 flex items-center justify-between">
-          <h3 class="text-sm md:text-base tracking-[0.25em]">TEE V1</h3>
-          <p class="text-sm text-gray-400">€60</p>
-        </div>
-      </article>
-
-      <article class="group relative">
-        <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-          <Image
-            src={cap}
-            alt="Cap NEO.NAUTZ"
-            width={800}
-            height={1000}
-            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-
-          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-            <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
-              VIEW PRODUCT
-            </button>
-          </div>
-        </div>
-
-        <div class="mt-4 flex items-center justify-between">
-          <h3 class="text-sm md:text-base tracking-[0.25em]">CAP V1</h3>
-          <p class="text-sm text-gray-400">€40</p>
-        </div>
-      </article>
+      <ProductCard
+        image={cap}
+        alt="Cap NEO.NAUTZ"
+        name="CAP V1"
+        price="€40"
+      />
     </div>
   </section>
 </Layout>
