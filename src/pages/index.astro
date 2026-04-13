@@ -1,12 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
+import { Image } from 'astro:assets';
+
+import hoodie from '../assets/images/hoodie.png';
+import tee from '../assets/images/tee.png';
+import cap from '../assets/images/cap.png';
 ---
 
 <Layout>
   <Navbar />
 
-  <!-- HERO -->
   <section class="h-screen bg-black flex flex-col items-center justify-center text-white gap-6">
     <h1 class="text-6xl md:text-8xl font-bold tracking-widest hover:tracking-[0.2em] transition-all duration-500">
       NEO.NAUTZ
@@ -16,7 +20,10 @@ import Navbar from '../components/Navbar.astro';
       EXCLUSIVE DROPS
     </p>
 
-    <a href="#drop" class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105">
+    <a
+      href="#drop"
+      class="border border-white px-6 py-3 text-sm tracking-widest transition-all duration-300 hover:bg-white hover:text-black hover:scale-105"
+    >
       SHOP
     </a>
 
@@ -51,30 +58,27 @@ import Navbar from '../components/Navbar.astro';
     </script>
   </section>
 
-  <!-- DROP -->
   <section id="drop" class="bg-black text-white py-20 px-6">
     <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 tracking-widest">
       LATEST DROP
     </h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-
-      <!-- PRODUCTO 1 -->
       <article class="group relative">
         <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
+          <Image
+            src={hoodie}
+            alt="Hoodie NEO.NAUTZ"
+            width={800}
+            height={1000}
+            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
 
-          <!-- Imagen (placeholder) -->
-          <div class="h-80 bg-zinc-900 flex items-center justify-center text-zinc-600 tracking-[0.3em]">
-            HOODIE
-          </div>
-
-          <!-- Overlay -->
           <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
             <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
               VIEW PRODUCT
             </button>
           </div>
-
         </div>
 
         <div class="mt-4 flex items-center justify-between">
@@ -83,20 +87,21 @@ import Navbar from '../components/Navbar.astro';
         </div>
       </article>
 
-      <!-- PRODUCTO 2 -->
       <article class="group relative">
         <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-
-          <div class="h-80 bg-zinc-900 flex items-center justify-center text-zinc-600 tracking-[0.3em]">
-            TEE
-          </div>
+          <Image
+            src={tee}
+            alt="Tee NEO.NAUTZ"
+            width={800}
+            height={1000}
+            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
 
           <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
             <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
               VIEW PRODUCT
             </button>
           </div>
-
         </div>
 
         <div class="mt-4 flex items-center justify-between">
@@ -105,20 +110,21 @@ import Navbar from '../components/Navbar.astro';
         </div>
       </article>
 
-      <!-- PRODUCTO 3 -->
       <article class="group relative">
         <div class="overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 relative">
-
-          <div class="h-80 bg-zinc-900 flex items-center justify-center text-zinc-600 tracking-[0.3em]">
-            CAP
-          </div>
+          <Image
+            src={cap}
+            alt="Cap NEO.NAUTZ"
+            width={800}
+            height={1000}
+            class="h-80 w-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
 
           <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
             <button class="border border-white px-4 py-2 text-xs tracking-widest hover:bg-white hover:text-black transition">
               VIEW PRODUCT
             </button>
           </div>
-
         </div>
 
         <div class="mt-4 flex items-center justify-between">
@@ -126,8 +132,6 @@ import Navbar from '../components/Navbar.astro';
           <p class="text-sm text-gray-400">€40</p>
         </div>
       </article>
-
     </div>
   </section>
-
 </Layout>
