@@ -1,22 +1,29 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Navbar from '../../components/Navbar.astro';
-import { Image } from 'astro:assets';
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import { Image } from "astro:assets";
 
-import tee01 from '../../assets/images/tee-01.png';
-import tee02 from '../../assets/images/tee-02.png';
-import tee03 from '../../assets/images/tee-03.png';
+import tee01 from "../../assets/images/tee-01.png";
+import tee02 from "../../assets/images/tee-02.png";
+import tee03 from "../../assets/images/tee-03.png";
 
 const product = {
-  name: 'TEE V1',
-  price: '€60',
+  name: "TEE V1",
+  price: "€60",
   description:
-    'Oversized black tee with bold Neo.Nautz front and back graphics. Designed for a clean silhouette with strong visual identity and everyday wear.',
+    "Oversized black tee with bold Neo.Nautz front and back graphics. Designed for a clean silhouette with strong visual identity and everyday wear.",
   soldOut: false,
   images: [
-    { src: tee01, alt: 'Tee NEO.NAUTZ image 1' },
-    { src: tee02, alt: 'Tee NEO.NAUTZ image 2' },
-    { src: tee03, alt: 'Tee NEO.NAUTZ image 3' },
+    { src: tee01, alt: "Tee NEO.NAUTZ image 1" },
+    { src: tee02, alt: "Tee NEO.NAUTZ image 2" },
+    { src: tee03, alt: "Tee NEO.NAUTZ image 3" },
+  ],
+  sizes: [
+    { name: "S", stock: 2 },
+    { name: "M", stock: 0 },
+    { name: "L", stock: 5 },
+    { name: "XL", stock: 1 },
+    { name: "XXL", stock: 0 },
   ],
 };
 ---
@@ -25,40 +32,71 @@ const product = {
   <Navbar />
 
   <section class="min-h-screen bg-black text-white px-6 py-32">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-      
+    <div
+      class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+    >
       <!-- GALERÍA -->
       <div class="w-full flex flex-col items-center">
-        <div class="w-full max-w-md overflow-hidden border border-gray-800 bg-black">
+        <div
+          class="w-full max-w-md overflow-hidden border border-gray-800 bg-black"
+        >
           <div class="relative overflow-hidden">
-            <div id="product-slider" class="flex transition-transform duration-500 ease-in-out" style={`width: ${product.images.length * 100}%`}>
-              {product.images.map((image) => (
-                <div class="shrink-0" style={`width: ${100 / product.images.length}%`}>
-                  <Image src={image.src} alt={image.alt} width={800} height={1000} class="w-full h-[520px] object-cover object-center" />
-                </div>
-              ))}
+            <div
+              id="product-slider"
+              class="flex transition-transform duration-500 ease-in-out"
+              style={`width: ${product.images.length * 100}%`}
+            >
+              {
+                product.images.map((image) => (
+                  <div
+                    class="shrink-0"
+                    style={`width: ${100 / product.images.length}%`}
+                  >
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={800}
+                      height={1000}
+                      class="w-full h-130 object-cover object-center"
+                    />
+                  </div>
+                ))
+              }
             </div>
 
-            <button id="product-prev" class="absolute left-3 top-1/2 -translate-y-1/2 border border-white/20 bg-black/80 px-3 py-2 text-[10px] uppercase tracking-[0.3em]">
+            <button
+              id="product-prev"
+              class="absolute left-3 top-1/2 -translate-y-1/2 border border-white/20 bg-black/80 px-3 py-2 text-[10px] uppercase tracking-[0.3em]"
+            >
               Prev
             </button>
 
-            <button id="product-next" class="absolute right-3 top-1/2 -translate-y-1/2 border border-white/20 bg-black/80 px-3 py-2 text-[10px] uppercase tracking-[0.3em]">
+            <button
+              id="product-next"
+              class="absolute right-3 top-1/2 -translate-y-1/2 border border-white/20 bg-black/80 px-3 py-2 text-[10px] uppercase tracking-[0.3em]"
+            >
               Next
             </button>
           </div>
         </div>
 
         <div class="mt-6 flex justify-center gap-3">
-          {product.images.map((_, index) => (
-            <button class={`product-dot h-2 w-2 rounded-full ${index === 0 ? 'bg-white' : 'bg-white/20'}`} data-index={index}></button>
-          ))}
+          {
+            product.images.map((_, index) => (
+              <button
+                class={`product-dot h-2 w-2 rounded-full ${index === 0 ? "bg-white" : "bg-white/20"}`}
+                data-index={index}
+              />
+            ))
+          }
         </div>
       </div>
 
       <!-- INFO -->
       <div class="flex flex-col gap-6">
-        <p class="text-xs tracking-[0.3em] text-gray-500 uppercase">NEO.NAUTZ / DROP 01</p>
+        <p class="text-xs tracking-[0.3em] text-gray-500 uppercase">
+          NEO.NAUTZ / DROP 01
+        </p>
 
         <h1 class="text-4xl md:text-6xl font-bold tracking-widest uppercase">
           {product.name}
@@ -67,29 +105,79 @@ const product = {
         <div class="flex items-center gap-4">
           <p class="text-2xl text-gray-300">{product.price}</p>
 
-          {product.soldOut && (
-            <span class="border border-white/20 px-3 py-1 text-xs uppercase tracking-[0.28em] text-zinc-400">
-              Sold Out
-            </span>
-          )}
+          {
+            product.soldOut && (
+              <span class="border border-white/20 px-3 py-1 text-xs uppercase tracking-[0.28em] text-zinc-400">
+                Sold Out
+              </span>
+            )
+          }
         </div>
 
         <p class="text-sm text-gray-400 max-w-xl">
           {product.description}
         </p>
 
-        <div class="flex gap-3 pt-2">
-          {product.soldOut ? (
-            <button disabled class="border border-gray-700 px-6 py-3 text-gray-500 uppercase">
-              Sold Out
-            </button>
-          ) : (
-            <button class="border border-white px-6 py-3 uppercase hover:bg-white hover:text-black transition">
-              Add To Cart
-            </button>
-          )}
+        <!-- SIZES -->
+        <div class="flex flex-col gap-4 pt-2">
+          <div class="flex items-center justify-between">
+            <p class="text-xs uppercase tracking-[0.28em] text-gray-500">
+              Select Size
+            </p>
+            <p
+              id="selected-size-label"
+              class="text-xs uppercase tracking-[0.2em] text-gray-400"
+            >
+              No size selected
+            </p>
+          </div>
 
-          <a href="/#drop" class="border border-gray-700 px-6 py-3 text-gray-300 uppercase">
+          <div class="flex flex-wrap gap-3">
+            {
+              product.sizes.map((size) => {
+                const isSoldOut = size.stock === 0;
+
+                return (
+                  <button
+                    type="button"
+                    class={`size-option min-w-17 border px-4 py-3 text-xs uppercase tracking-[0.25em] transition ${
+                      isSoldOut
+                        ? "border-gray-800 text-gray-600 cursor-not-allowed opacity-50"
+                        : "border-gray-700 text-white hover:border-white"
+                    }`}
+                    data-size={size.name}
+                    data-stock={size.stock}
+                    disabled={isSoldOut}
+                  >
+                    {size.name}
+                  </button>
+                );
+              })
+            }
+          </div>
+
+          <p
+            id="size-stock-message"
+            class="text-xs uppercase tracking-[0.18em] text-gray-500"
+          >
+            Select a size to check availability
+          </p>
+        </div>
+
+        <!-- CTA -->
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button
+            id="product-cta"
+            disabled
+            class="border border-gray-700 px-6 py-3 uppercase text-gray-500 cursor-not-allowed transition"
+          >
+            Select Size
+          </button>
+
+          <a
+            href="/#drop"
+            class="border border-gray-700 px-6 py-3 text-gray-300 uppercase hover:border-white hover:text-white transition"
+          >
             Back
           </a>
         </div>
@@ -97,11 +185,17 @@ const product = {
     </div>
   </section>
 
-  <script is:inline define:vars={{ imageCount: product.images.length }}>
-    const slider = document.getElementById('product-slider');
-    const prevBtn = document.getElementById('product-prev');
-    const nextBtn = document.getElementById('product-next');
-    const dots = Array.from(document.querySelectorAll('.product-dot'));
+  <script
+    is:inline
+    define:vars={{
+      imageCount: product.images.length,
+      productName: product.name,
+    }}
+  >
+    const slider = document.getElementById("product-slider");
+    const prevBtn = document.getElementById("product-prev");
+    const nextBtn = document.getElementById("product-next");
+    const dots = Array.from(document.querySelectorAll(".product-dot"));
 
     if (slider && imageCount > 1) {
       let current = 0;
@@ -110,23 +204,23 @@ const product = {
         slider.style.transform = `translateX(-${current * (100 / imageCount)}%)`;
 
         dots.forEach((dot, index) => {
-          dot.classList.toggle('bg-white', index === current);
-          dot.classList.toggle('bg-white/20', index !== current);
+          dot.classList.toggle("bg-white", index === current);
+          dot.classList.toggle("bg-white/20", index !== current);
         });
       };
 
-      prevBtn?.addEventListener('click', () => {
+      prevBtn?.addEventListener("click", () => {
         current = current === 0 ? imageCount - 1 : current - 1;
         update();
       });
 
-      nextBtn?.addEventListener('click', () => {
+      nextBtn?.addEventListener("click", () => {
         current = current === imageCount - 1 ? 0 : current + 1;
         update();
       });
 
       dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
+        dot.addEventListener("click", () => {
           current = index;
           update();
         });
@@ -134,5 +228,60 @@ const product = {
 
       update();
     }
+
+    const sizeButtons = Array.from(document.querySelectorAll(".size-option"));
+    const selectedSizeLabel = document.getElementById("selected-size-label");
+    const sizeStockMessage = document.getElementById("size-stock-message");
+    const productCta = document.getElementById("product-cta");
+
+    let selectedSize = null;
+
+    sizeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const stock = Number(button.dataset.stock);
+        const size = button.dataset.size;
+
+        selectedSize = size;
+
+        sizeButtons.forEach((btn) => {
+          if (!btn.disabled) {
+            btn.classList.remove("border-white", "bg-white", "text-black");
+            btn.classList.add("border-gray-700", "text-white");
+          }
+        });
+
+        button.classList.remove("border-gray-700", "text-white");
+        button.classList.add("border-white", "bg-white", "text-black");
+
+        selectedSizeLabel.textContent = `Selected: ${size}`;
+
+        if (stock <= 2) {
+          sizeStockMessage.textContent = `Only ${stock} left`;
+        } else {
+          sizeStockMessage.textContent = `Available`;
+        }
+
+        productCta.textContent = `Request ${size}`;
+        productCta.removeAttribute("disabled");
+        productCta.classList.remove(
+          "border-gray-700",
+          "text-gray-500",
+          "cursor-not-allowed",
+        );
+        productCta.classList.add(
+          "border-white",
+          "text-white",
+          "hover:bg-white",
+          "hover:text-black",
+        );
+      });
+    });
+
+    productCta?.addEventListener("click", () => {
+      if (!selectedSize) return;
+
+      const message = `Hello, I want ${productName} size ${selectedSize}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`);
+    });
   </script>
 </Layout>
