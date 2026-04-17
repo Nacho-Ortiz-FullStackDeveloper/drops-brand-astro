@@ -1,0 +1,23 @@
+---
+import "../styles/global.css";
+import AdminSidebar from "../components/admin/AdminSidebar.astro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neo.Nautz Admin</title>
+  </head>
+
+  <body class="bg-black text-white">
+    <div class="flex min-h-screen">
+      <AdminSidebar />
+
+      <main class="flex-1 p-10">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
