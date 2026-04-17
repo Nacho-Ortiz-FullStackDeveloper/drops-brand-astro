@@ -1,0 +1,82 @@
+---
+import "../../styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - Neo.Nautz</title>
+  </head>
+
+  <body
+    class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6"
+  >
+    <!-- HERO / TITLE -->
+    <div class="text-center mb-16 max-w-3xl">
+      <p class="text-[10px] uppercase tracking-[0.4em] text-zinc-600">
+        Neo.Nautz Admin
+      </p>
+
+      <h1
+        class="mt-6 text-4xl md:text-6xl font-bold uppercase tracking-[0.25em]"
+      >
+        Admin Access Area
+      </h1>
+
+      <p class="mt-6 text-sm text-zinc-400">
+        Restricted access for internal management and drop control.
+      </p>
+    </div>
+
+    <!-- LOGIN BOX -->
+    <div
+      class="w-full max-w-md border border-zinc-800 bg-zinc-950/90 px-8 py-10 md:px-10 md:py-12"
+    >
+      <form class="flex flex-col gap-6">
+        <!-- USER -->
+        <div class="flex flex-col items-center gap-3">
+          <label class="text-[10px] uppercase tracking-[0.32em] text-zinc-500">
+            User
+          </label>
+
+          <input
+            type="email"
+            placeholder="admin@neonautz.com"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+          />
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="flex flex-col items-center gap-3">
+          <label class="text-[10px] uppercase tracking-[0.32em] text-zinc-500">
+            Password
+          </label>
+
+          <input
+            type="password"
+            placeholder="••••••••"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+          />
+        </div>
+
+        <!-- BUTTON -->
+        <button
+          type="submit"
+          class="mt-4 w-full border border-white bg-white px-6 py-3 text-sm uppercase tracking-[0.32em] text-black transition duration-300 hover:bg-zinc-900 hover:text-white"
+        >
+          Login
+        </button>
+      </form>
+
+      <div class="mt-8 text-center">
+        <a
+          href="/"
+          class="text-[10px] uppercase tracking-[0.28em] text-zinc-500 transition hover:text-white"
+        >
+          ← Back to site
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
