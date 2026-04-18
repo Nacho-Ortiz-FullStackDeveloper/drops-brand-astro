@@ -12,7 +12,6 @@ import "../../styles/global.css";
   <body
     class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6"
   >
-    <!-- HERO / TITLE -->
     <div class="text-center mb-16 max-w-3xl">
       <p class="text-[10px] uppercase tracking-[0.4em] text-zinc-600">
         Neo.Nautz Admin
@@ -29,38 +28,46 @@ import "../../styles/global.css";
       </p>
     </div>
 
-    <!-- LOGIN BOX -->
     <div
       class="w-full max-w-md border border-zinc-800 bg-zinc-950/90 px-8 py-10 md:px-10 md:py-12"
     >
-      <form class="flex flex-col gap-6">
-        <!-- USER -->
+      <form id="login-form" class="flex flex-col gap-6">
         <div class="flex flex-col items-center gap-3">
-          <label class="text-[10px] uppercase tracking-[0.32em] text-zinc-500">
+          <label
+            for="email"
+            class="text-[10px] uppercase tracking-[0.32em] text-zinc-500"
+          >
             User
           </label>
 
           <input
+            id="email"
             type="email"
             placeholder="admin@neonautz.com"
             class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
           />
         </div>
 
-        <!-- PASSWORD -->
         <div class="flex flex-col items-center gap-3">
-          <label class="text-[10px] uppercase tracking-[0.32em] text-zinc-500">
+          <label
+            for="password"
+            class="text-[10px] uppercase tracking-[0.32em] text-zinc-500"
+          >
             Password
           </label>
 
           <input
+            id="password"
             type="password"
-            placeholder="••••••••"
+            placeholder="********"
             class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
           />
         </div>
 
-        <!-- BUTTON -->
+        <p id="error" class="hidden text-center text-sm text-red-400"></p>
+
         <button
           type="submit"
           class="mt-4 w-full border border-white bg-white px-6 py-3 text-sm uppercase tracking-[0.32em] text-black transition duration-300 hover:bg-zinc-900 hover:text-white"
@@ -78,5 +85,44 @@ import "../../styles/global.css";
         </a>
       </div>
     </div>
+
+    <script>
+      import { createClient } from "@supabase/supabase-js";
+
+      const supabase = createClient(
+        import.meta.env.PUBLIC_SUPABASE_URL,
+        import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+      );
+
+      const form = document.getElementById("login-form");
+      const errorText = document.getElementById("error");
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+
+        if (!(emailInput instanceof HTMLInputElement)) return;
+        if (!(passwordInput instanceof HTMLInputElement)) return;
+        if (!(errorText instanceof HTMLElement)) return;
+
+        errorText.classList.add("hidden");
+        errorText.textContent = "";
+
+        const { error } = await supabase.auth.signInWithPassword({
+          email: emailInput.value.trim(),
+          password: passwordInput.value,
+        });
+
+        if (error) {
+          errorText.textContent = error.message || "Invalid credentials";
+          errorText.classList.remove("hidden");
+          return;
+        }
+
+        window.location.href = "/admin";
+      });
+    </script>
   </body>
 </html>

@@ -2,7 +2,9 @@
 
 ---
 
-<aside class="w-64 min-h-screen border-r border-zinc-800 bg-zinc-950 px-6 py-8">
+<aside
+  class="w-64 min-h-screen border-r border-zinc-800 bg-zinc-950 px-6 py-8 flex flex-col"
+>
   <div class="mb-10">
     <p class="text-xs uppercase tracking-[0.35em] text-zinc-500">Admin Panel</p>
     <h2 class="mt-3 text-2xl font-bold uppercase tracking-[0.28em] text-white">
@@ -41,4 +43,36 @@
       Requests
     </a>
   </nav>
+
+  <div class="mt-auto pt-10">
+    <button
+      id="logout-button"
+      type="button"
+      class="w-full border border-zinc-700 px-4 py-3 text-sm uppercase tracking-[0.22em] text-zinc-400 transition hover:border-white hover:text-white"
+    >
+      Logout
+    </button>
+  </div>
 </aside>
+
+<script>
+  import { createClient } from "@supabase/supabase-js";
+
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+  );
+
+  const logoutButton = document.getElementById("logout-button");
+
+  logoutButton?.addEventListener("click", async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Logout error:", error.message);
+      return;
+    }
+
+    window.location.href = "/admin/login";
+  });
+</script>

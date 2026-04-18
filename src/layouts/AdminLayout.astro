@@ -12,12 +12,44 @@ import AdminSidebar from "../components/admin/AdminSidebar.astro";
   </head>
 
   <body class="bg-black text-white">
-    <div class="flex min-h-screen">
-      <AdminSidebar />
+    <div id="admin-shell" class="hidden min-h-screen">
+      <div class="flex min-h-screen">
+        <AdminSidebar />
 
-      <main class="flex-1 p-10">
-        <slot />
-      </main>
+        <main class="flex-1 p-10">
+          <slot />
+        </main>
+      </div>
     </div>
+
+    <div
+      id="admin-loading"
+      class="flex min-h-screen items-center justify-center bg-black text-zinc-500 uppercase tracking-[0.28em]"
+    >
+      Checking access...
+    </div>
+
+    <script>
+      import { createClient } from "@supabase/supabase-js";
+
+      const supabase = createClient(
+        import.meta.env.PUBLIC_SUPABASE_URL,
+        import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+      );
+
+      const adminShell = document.getElementById("admin-shell");
+      const adminLoading = document.getElementById("admin-loading");
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        window.location.href = "/admin/login";
+      } else {
+        adminLoading?.classList.add("hidden");
+        adminShell?.classList.remove("hidden");
+      }
+    </script>
   </body>
 </html>

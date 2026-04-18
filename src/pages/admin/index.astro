@@ -3,7 +3,7 @@ import AdminLayout from "../../layouts/AdminLayout.astro";
 ---
 
 <AdminLayout>
-  <section class="flex flex-col gap-10">
+  <section id="admin-content" class="flex flex-col gap-10">
     <div>
       <p class="text-xs uppercase tracking-[0.35em] text-zinc-500">
         Neo.Nautz Admin
@@ -132,4 +132,16 @@ import AdminLayout from "../../layouts/AdminLayout.astro";
       </section>
     </div>
   </section>
+
+  <script type="module">
+    import { supabase } from "../../lib/supabase.js";
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      window.location.href = "/admin/login";
+    }
+  </script>
 </AdminLayout>
