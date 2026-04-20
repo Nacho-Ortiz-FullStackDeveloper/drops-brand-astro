@@ -12,8 +12,17 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^10.0.5",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.103.3",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.5",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^8.58.2",
+    "astro-eslint-parser": "^1.4.0",
+    "eslint": "^10.2.0",
+    "eslint-plugin-astro": "^1.7.0"
   }
 }
