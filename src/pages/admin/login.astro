@@ -86,18 +86,39 @@ import "../../styles/global.css";
       </div>
     </div>
 
+    <div
+      id="supabase-config"
+      data-url={import.meta.env.PUBLIC_SUPABASE_URL}
+      data-key={import.meta.env.PUBLIC_SUPABASE_ANON_KEY}
+      hidden
+    >
+    </div>
+
     <script>
-      import { createClient } from "@supabase/supabase-js";
+      import { createBrowserClient } from "@supabase/ssr";
 
-      const supabase = createClient(
-        import.meta.env.PUBLIC_SUPABASE_URL,
-        import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-      );
-
+      const configEl = document.getElementById("supabase-config");
       const form = document.getElementById("login-form");
       const errorText = document.getElementById("error");
 
-      form?.addEventListener("submit", async (e) => {
+      if (
+        !(configEl instanceof HTMLElement) ||
+        !(form instanceof HTMLFormElement) ||
+        !(errorText instanceof HTMLElement)
+      ) {
+        throw new Error("Login setup failed");
+      }
+
+      const supabaseUrl = configEl.dataset.url;
+      const supabaseKey = configEl.dataset.key;
+
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Missing Supabase environment variables");
+      }
+
+      const supabase = createBrowserClient(supabaseUrl, supabaseKey);
+
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const emailInput = document.getElementById("email");
@@ -105,7 +126,6 @@ import "../../styles/global.css";
 
         if (!(emailInput instanceof HTMLInputElement)) return;
         if (!(passwordInput instanceof HTMLInputElement)) return;
-        if (!(errorText instanceof HTMLElement)) return;
 
         errorText.classList.add("hidden");
         errorText.textContent = "";

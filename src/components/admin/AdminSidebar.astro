@@ -1,10 +1,4 @@
----
-
----
-
-<aside
-  class="w-64 min-h-screen border-r border-zinc-800 bg-zinc-950 px-6 py-8 flex flex-col"
->
+<aside class="w-64 min-h-screen border-r border-zinc-800 bg-zinc-950 px-6 py-8 flex flex-col">
   <div class="mb-10">
     <p class="text-xs uppercase tracking-[0.35em] text-zinc-500">Admin Panel</p>
     <h2 class="mt-3 text-2xl font-bold uppercase tracking-[0.28em] text-white">
@@ -12,9 +6,7 @@
     </h2>
   </div>
 
-  <nav
-    class="flex flex-col gap-3 text-sm uppercase tracking-[0.22em] text-zinc-400"
-  >
+  <nav class="flex flex-col gap-3 text-sm uppercase tracking-[0.22em] text-zinc-400">
     <a
       href="/admin"
       class="rounded-none border border-transparent px-4 py-3 transition hover:border-zinc-700 hover:text-white"
@@ -44,6 +36,13 @@
     </a>
   </nav>
 
+  <div
+    id="supabase-logout-config"
+    data-url={import.meta.env.PUBLIC_SUPABASE_URL}
+    data-key={import.meta.env.PUBLIC_SUPABASE_ANON_KEY}
+    hidden
+  ></div>
+
   <div class="mt-auto pt-10">
     <button
       id="logout-button"
@@ -56,23 +55,35 @@
 </aside>
 
 <script>
-  import { createClient } from "@supabase/supabase-js";
+  import { createBrowserClient } from '@supabase/ssr';
 
-  const supabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-  );
+  const configEl = document.getElementById('supabase-logout-config');
+  const logoutButton = document.getElementById('logout-button');
 
-  const logoutButton = document.getElementById("logout-button");
+  if (
+    !(configEl instanceof HTMLElement) ||
+    !(logoutButton instanceof HTMLButtonElement)
+  ) {
+    throw new Error('Logout setup failed');
+  }
 
-  logoutButton?.addEventListener("click", async () => {
+  const supabaseUrl = configEl.dataset.url;
+  const supabaseKey = configEl.dataset.key;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+
+  const supabase = createBrowserClient(supabaseUrl, supabaseKey);
+
+  logoutButton.addEventListener('click', async () => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      console.error("Logout error:", error.message);
+      console.error('Logout error:', error.message);
       return;
     }
 
-    window.location.href = "/admin/login";
+    window.location.href = '/admin/login';
   });
 </script>
