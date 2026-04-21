@@ -6,7 +6,6 @@
   class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10"
 >
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-    <!-- LOGO -->
     <a
       href="/"
       class="text-white text-sm md:text-base tracking-[0.3em] font-medium uppercase hover:opacity-70 transition"
@@ -14,7 +13,6 @@
       NEO.NAUTZ
     </a>
 
-    <!-- MENU -->
     <nav
       class="hidden md:flex items-center gap-10 text-xs tracking-[0.25em] uppercase text-gray-300"
     >
@@ -23,17 +21,38 @@
       <a href="/about" class="hover:text-white transition">About</a>
     </nav>
 
-    <!-- DERECHA -->
     <div class="hidden md:flex items-center gap-4">
-      <!-- ADMIN -->
+      <div id="guest-links" class="hidden md:flex items-center gap-4">
+        <a
+          href="/auth"
+          class="text-xs uppercase tracking-[0.3em] text-gray-400 hover:text-white transition"
+        >
+          Acceso
+        </a>
+      </div>
+
+      <div id="user-links" class="hidden md:flex items-center gap-4">
+        <span
+          id="user-email"
+          class="text-xs uppercase tracking-[0.3em] text-white"></span>
+
+        <button
+          id="logout-button"
+          type="button"
+          class="text-xs uppercase tracking-[0.3em] text-gray-400 hover:text-white transition"
+        >
+          Logout
+        </button>
+      </div>
+
       <a
+        id="admin-link"
         href="/admin"
-        class="text-xs uppercase tracking-[0.3em] text-gray-400 hover:text-white transition"
+        class="hidden text-xs uppercase tracking-[0.3em] text-gray-400 hover:text-white transition"
       >
         Admin
       </a>
 
-      <!-- SHOP -->
       <a
         href="/#drop"
         class="border border-white px-4 py-2 text-xs uppercase tracking-[0.3em] transition hover:bg-white hover:text-black"
@@ -42,11 +61,9 @@
       </a>
     </div>
 
-    <!-- MOBILE MENU BUTTON -->
-    <button id="menu-btn" class="md:hidden text-white text-lg"> ☰ </button>
+    <button id="menu-btn" class="md:hidden text-white text-lg">☰</button>
   </div>
 
-  <!-- MOBILE MENU -->
   <div
     id="mobile-menu"
     class="hidden flex-col items-center gap-6 py-6 bg-black text-white text-sm tracking-widest uppercase border-t border-white/10"
@@ -55,11 +72,38 @@
     <a href="/vip">VIP</a>
     <a href="/about">About</a>
 
-    <!-- ADMIN MOBILE -->
-    <a href="/admin" class="text-gray-400">Admin</a>
+    <div id="mobile-guest-links" class="hidden flex-col items-center gap-6">
+      <a href="/auth" class="text-gray-400">Acceso</a>
+    </div>
+
+    <div id="mobile-user-links" class="hidden flex-col items-center gap-6">
+      <span id="mobile-user-email" class="text-white"></span>
+
+      <button
+        id="mobile-logout-button"
+        type="button"
+        class="text-gray-400 uppercase tracking-widest"
+      >
+        Logout
+      </button>
+    </div>
+
+    <a id="mobile-admin-link" href="/admin" class="hidden text-gray-400"
+      >Admin</a
+    >
   </div>
 
-  <script is:inline>
+  <div
+    id="supabase-config"
+    data-url={import.meta.env.PUBLIC_SUPABASE_URL}
+    data-key={import.meta.env.PUBLIC_SUPABASE_ANON_KEY}
+    hidden
+  >
+  </div>
+
+  <script>
+    import { createBrowserClient } from "@supabase/ssr";
+
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("mobile-menu");
 
@@ -68,5 +112,119 @@
         menu.classList.toggle("hidden");
       });
     }
+
+    const configEl = document.getElementById("supabase-config");
+    const guestLinks = document.getElementById("guest-links");
+    const userLinks = document.getElementById("user-links");
+    const mobileGuestLinks = document.getElementById("mobile-guest-links");
+    const mobileUserLinks = document.getElementById("mobile-user-links");
+    const userEmailEl = document.getElementById("user-email");
+    const mobileUserEmailEl = document.getElementById("mobile-user-email");
+    const adminLink = document.getElementById("admin-link");
+    const mobileAdminLink = document.getElementById("mobile-admin-link");
+    const logoutButton = document.getElementById("logout-button");
+    const mobileLogoutButton = document.getElementById("mobile-logout-button");
+
+    if (!(configEl instanceof HTMLElement)) {
+      throw new Error("Navbar Supabase config missing");
+    }
+
+    const supabaseUrl = configEl.dataset.url;
+    const supabaseKey = configEl.dataset.key;
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error("Missing Supabase environment variables");
+    }
+
+    const supabase = createBrowserClient(supabaseUrl, supabaseKey);
+
+    function hideAdminLinks() {
+      if (adminLink) adminLink.classList.add("hidden");
+      if (mobileAdminLink) mobileAdminLink.classList.add("hidden");
+    }
+
+    function showAdminLinks() {
+      if (adminLink) adminLink.classList.remove("hidden");
+      if (mobileAdminLink) mobileAdminLink.classList.remove("hidden");
+    }
+
+    function showGuestState() {
+      if (guestLinks) guestLinks.classList.remove("hidden");
+      if (userLinks) userLinks.classList.add("hidden");
+
+      if (mobileGuestLinks) mobileGuestLinks.classList.remove("hidden");
+      if (mobileUserLinks) mobileUserLinks.classList.add("hidden");
+
+      if (userEmailEl) userEmailEl.textContent = "";
+      if (mobileUserEmailEl) mobileUserEmailEl.textContent = "";
+
+      hideAdminLinks();
+    }
+
+    function showUserState() {
+      if (guestLinks) guestLinks.classList.add("hidden");
+      if (userLinks) userLinks.classList.remove("hidden");
+
+      if (mobileGuestLinks) mobileGuestLinks.classList.add("hidden");
+      if (mobileUserLinks) mobileUserLinks.classList.remove("hidden");
+    }
+
+    async function refreshNavbar() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session || !session.user) {
+        showGuestState();
+        return;
+      }
+
+      showUserState();
+
+      const safeEmail = session.user.email
+        ? session.user.email.split("@")[0].toUpperCase()
+        : "";
+
+      if (userEmailEl) userEmailEl.textContent = safeEmail;
+      if (mobileUserEmailEl) mobileUserEmailEl.textContent = safeEmail;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error || !data || data.role !== "admin") {
+        hideAdminLinks();
+        return;
+      }
+
+      showAdminLinks();
+    }
+
+    async function handleLogout() {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error("Logout error:", error.message);
+        return;
+      }
+
+      window.location.href = "/";
+    }
+
+    if (logoutButton) {
+      logoutButton.addEventListener("click", handleLogout);
+    }
+
+    if (mobileLogoutButton) {
+      mobileLogoutButton.addEventListener("click", handleLogout);
+    }
+
+    refreshNavbar();
+
+    supabase.auth.onAuthStateChange(() => {
+      refreshNavbar();
+    });
   </script>
 </header>

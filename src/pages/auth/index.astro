@@ -1,0 +1,292 @@
+---
+import "../../styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access - Neo.Nautz</title>
+  </head>
+
+  <body
+    class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6"
+  >
+    <div class="text-center mb-16 max-w-3xl">
+      <p class="text-[10px] uppercase tracking-[0.4em] text-zinc-600">
+        Neo.Nautz Access
+      </p>
+
+      <h1
+        class="mt-6 text-4xl md:text-6xl font-bold uppercase tracking-[0.25em]"
+      >
+        Enter The Brand
+      </h1>
+
+      <p class="mt-6 text-sm text-zinc-400">
+        Sign in or create your account to stay connected to future drops and
+        access.
+      </p>
+    </div>
+
+    <div
+      class="w-full max-w-md border border-zinc-800 bg-zinc-950/90 px-8 py-10 md:px-10 md:py-12"
+    >
+      <div class="grid grid-cols-2 border border-zinc-800 bg-black mb-8">
+        <button
+          id="show-login"
+          type="button"
+          class="border-r border-zinc-800 px-4 py-3 text-xs uppercase tracking-[0.28em] text-white transition"
+        >
+          Login
+        </button>
+
+        <button
+          id="show-register"
+          type="button"
+          class="px-4 py-3 text-xs uppercase tracking-[0.28em] text-zinc-500 transition hover:text-white"
+        >
+          Register
+        </button>
+      </div>
+
+      <form id="login-form" class="flex flex-col gap-6">
+        <div class="flex flex-col items-center gap-3">
+          <label
+            for="login-email"
+            class="text-[10px] uppercase tracking-[0.32em] text-zinc-500"
+          >
+            Email
+          </label>
+
+          <input
+            id="login-email"
+            type="email"
+            placeholder="user@neonautz.com"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col items-center gap-3">
+          <label
+            for="login-password"
+            class="text-[10px] uppercase tracking-[0.32em] text-zinc-500"
+          >
+            Password
+          </label>
+
+          <input
+            id="login-password"
+            type="password"
+            placeholder="********"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
+          />
+        </div>
+
+        <p id="login-error" class="hidden text-center text-sm text-red-400"></p>
+
+        <button
+          type="submit"
+          class="mt-4 w-full border border-white bg-white px-6 py-3 text-sm uppercase tracking-[0.32em] text-black transition duration-300 hover:bg-zinc-900 hover:text-white"
+        >
+          Login
+        </button>
+      </form>
+
+      <form id="register-form" class="hidden flex-col gap-6">
+        <div class="flex flex-col items-center gap-3">
+          <label
+            for="register-email"
+            class="text-[10px] uppercase tracking-[0.32em] text-zinc-500"
+          >
+            Email
+          </label>
+
+          <input
+            id="register-email"
+            type="email"
+            placeholder="user@neonautz.com"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col items-center gap-3">
+          <label
+            for="register-password"
+            class="text-[10px] uppercase tracking-[0.32em] text-zinc-500"
+          >
+            Password
+          </label>
+
+          <input
+            id="register-password"
+            type="password"
+            placeholder="Minimum 6 characters"
+            minlength="6"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
+          />
+        </div>
+
+        <p id="register-error" class="hidden text-center text-sm text-red-400">
+        </p>
+        <p
+          id="register-success"
+          class="hidden text-center text-sm text-emerald-400"
+        >
+        </p>
+
+        <button
+          type="submit"
+          class="mt-4 w-full border border-white bg-white px-6 py-3 text-sm uppercase tracking-[0.32em] text-black transition duration-300 hover:bg-zinc-900 hover:text-white"
+        >
+          Register
+        </button>
+      </form>
+
+      <div class="mt-8 text-center">
+        <a
+          href="/"
+          class="text-[10px] uppercase tracking-[0.28em] text-zinc-500 transition hover:text-white"
+        >
+          ← Back to site
+        </a>
+      </div>
+    </div>
+
+    <div
+      id="supabase-config"
+      data-url={import.meta.env.PUBLIC_SUPABASE_URL}
+      data-key={import.meta.env.PUBLIC_SUPABASE_ANON_KEY}
+      hidden
+    >
+    </div>
+
+    <script>
+      import { createBrowserClient } from "@supabase/ssr";
+
+      const configEl = document.getElementById("supabase-config");
+      const loginForm = document.getElementById("login-form");
+      const registerForm = document.getElementById("register-form");
+      const showLoginBtn = document.getElementById("show-login");
+      const showRegisterBtn = document.getElementById("show-register");
+      const loginError = document.getElementById("login-error");
+      const registerError = document.getElementById("register-error");
+      const registerSuccess = document.getElementById("register-success");
+
+      if (
+        !(configEl instanceof HTMLElement) ||
+        !(loginForm instanceof HTMLFormElement) ||
+        !(registerForm instanceof HTMLFormElement) ||
+        !(showLoginBtn instanceof HTMLButtonElement) ||
+        !(showRegisterBtn instanceof HTMLButtonElement) ||
+        !(loginError instanceof HTMLElement) ||
+        !(registerError instanceof HTMLElement) ||
+        !(registerSuccess instanceof HTMLElement)
+      ) {
+        throw new Error("Auth setup failed");
+      }
+
+      const supabaseUrl = configEl.dataset.url;
+      const supabaseKey = configEl.dataset.key;
+
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Missing Supabase environment variables");
+      }
+
+      const supabase = createBrowserClient(supabaseUrl, supabaseKey);
+
+      const showLoginView = () => {
+        loginForm.classList.remove("hidden");
+        loginForm.classList.add("flex");
+
+        registerForm.classList.add("hidden");
+        registerForm.classList.remove("flex");
+
+        showLoginBtn.classList.remove("text-zinc-500");
+        showLoginBtn.classList.add("text-white");
+
+        showRegisterBtn.classList.remove("text-white");
+        showRegisterBtn.classList.add("text-zinc-500");
+      };
+
+      const showRegisterView = () => {
+        registerForm.classList.remove("hidden");
+        registerForm.classList.add("flex");
+
+        loginForm.classList.add("hidden");
+        loginForm.classList.remove("flex");
+
+        showRegisterBtn.classList.remove("text-zinc-500");
+        showRegisterBtn.classList.add("text-white");
+
+        showLoginBtn.classList.remove("text-white");
+        showLoginBtn.classList.add("text-zinc-500");
+      };
+
+      showLoginBtn.addEventListener("click", showLoginView);
+      showRegisterBtn.addEventListener("click", showRegisterView);
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const emailInput = document.getElementById("login-email");
+        const passwordInput = document.getElementById("login-password");
+
+        if (!(emailInput instanceof HTMLInputElement)) return;
+        if (!(passwordInput instanceof HTMLInputElement)) return;
+
+        loginError.classList.add("hidden");
+        loginError.textContent = "";
+
+        const { error } = await supabase.auth.signInWithPassword({
+          email: emailInput.value.trim(),
+          password: passwordInput.value,
+        });
+
+        if (error) {
+          loginError.textContent = error.message || "Invalid credentials";
+          loginError.classList.remove("hidden");
+          return;
+        }
+
+        window.location.href = "/";
+      });
+
+      registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const emailInput = document.getElementById("register-email");
+        const passwordInput = document.getElementById("register-password");
+
+        if (!(emailInput instanceof HTMLInputElement)) return;
+        if (!(passwordInput instanceof HTMLInputElement)) return;
+
+        registerError.classList.add("hidden");
+        registerSuccess.classList.add("hidden");
+        registerError.textContent = "";
+        registerSuccess.textContent = "";
+
+        const { error } = await supabase.auth.signUp({
+          email: emailInput.value.trim(),
+          password: passwordInput.value,
+        });
+
+        if (error) {
+          registerError.textContent =
+            error.message || "Could not create account";
+          registerError.classList.remove("hidden");
+          return;
+        }
+
+        registerSuccess.textContent =
+          "Account created successfully. Check your email to confirm your account.";
+        registerSuccess.classList.remove("hidden");
+        registerForm.reset();
+      });
+    </script>
+  </body>
+</html>

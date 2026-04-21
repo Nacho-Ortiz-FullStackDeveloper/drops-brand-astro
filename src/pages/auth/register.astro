@@ -1,0 +1,148 @@
+---
+import "../../styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Neo.Nautz</title>
+  </head>
+
+  <body class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
+    <div class="text-center mb-16 max-w-3xl">
+      <p class="text-[10px] uppercase tracking-[0.4em] text-zinc-600">
+        Neo.Nautz Account
+      </p>
+
+      <h1 class="mt-6 text-4xl md:text-6xl font-bold uppercase tracking-[0.25em]">
+        Create Account
+      </h1>
+
+      <p class="mt-6 text-sm text-zinc-400">
+        Register as a client to receive drop updates and future access features.
+      </p>
+    </div>
+
+    <div class="w-full max-w-md border border-zinc-800 bg-zinc-950/90 px-8 py-10 md:px-10 md:py-12">
+      <form id="register-form" class="flex flex-col gap-6">
+        <div class="flex flex-col items-center gap-3">
+          <label for="email" class="text-[10px] uppercase tracking-[0.32em] text-zinc-500">
+            Email
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="user@neonautz.com"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col items-center gap-3">
+          <label for="password" class="text-[10px] uppercase tracking-[0.32em] text-zinc-500">
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            placeholder="Minimum 6 characters"
+            class="w-full border border-zinc-700 bg-black px-4 py-3 text-center text-sm text-white placeholder:text-zinc-600 focus:border-white focus:outline-none transition"
+            required
+            minlength="6"
+          />
+        </div>
+
+        <p id="error" class="hidden text-center text-sm text-red-400"></p>
+        <p id="success" class="hidden text-center text-sm text-emerald-400"></p>
+
+        <button
+          type="submit"
+          class="mt-4 w-full border border-white bg-white px-6 py-3 text-sm uppercase tracking-[0.32em] text-black transition duration-300 hover:bg-zinc-900 hover:text-white"
+        >
+          Register
+        </button>
+      </form>
+
+      <div class="mt-8 text-center">
+        <a
+          href="/auth/login"
+          class="text-[10px] uppercase tracking-[0.28em] text-zinc-500 transition hover:text-white"
+        >
+          Already have an account? Login
+        </a>
+      </div>
+    </div>
+
+    <div
+      id="supabase-config"
+      data-url={import.meta.env.PUBLIC_SUPABASE_URL}
+      data-key={import.meta.env.PUBLIC_SUPABASE_ANON_KEY}
+      hidden
+    ></div>
+
+    <script>
+      import { createBrowserClient } from "@supabase/ssr";
+
+      const configEl = document.getElementById("supabase-config");
+      const form = document.getElementById("register-form");
+      const errorText = document.getElementById("error");
+      const successText = document.getElementById("success");
+
+      if (
+        !(configEl instanceof HTMLElement) ||
+        !(form instanceof HTMLFormElement) ||
+        !(errorText instanceof HTMLElement) ||
+        !(successText instanceof HTMLElement)
+      ) {
+        throw new Error("Register setup failed");
+      }
+
+      const supabaseUrl = configEl.dataset.url;
+      const supabaseKey = configEl.dataset.key;
+
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Missing Supabase environment variables");
+      }
+
+      const supabase = createBrowserClient(supabaseUrl, supabaseKey);
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+
+        if (!(emailInput instanceof HTMLInputElement)) return;
+        if (!(passwordInput instanceof HTMLInputElement)) return;
+
+        errorText.classList.add("hidden");
+        successText.classList.add("hidden");
+        errorText.textContent = "";
+        successText.textContent = "";
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (error) {
+          errorText.textContent = error.message || "Could not create account";
+          errorText.classList.remove("hidden");
+          return;
+        }
+
+        successText.textContent =
+          "Account created successfully. Check your email if confirmation is enabled.";
+        successText.classList.remove("hidden");
+
+        form.reset();
+      });
+    </script>
+  </body>
+</html>
