@@ -1,35 +1,90 @@
 ---
 import AdminLayout from "../../layouts/AdminLayout.astro";
+import { createServerSupabaseClient } from "../../lib/supabaseServer.js";
+
+const supabase = createServerSupabaseClient(Astro);
+
+// Usuario autenticado
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+if (!user) {
+  return Astro.redirect("/admin/login");
+}
+
+// Perfil con rol
+const { data: profile, error: profileError } = await supabase
+  .from("profiles")
+  .select("*")
+  .eq("id", user.id)
+  .single();
+
+if (profileError || !profile || profile.role !== "admin") {
+  return Astro.redirect("/");
+}
+
+// Número real de productos
+const { count: productsCount, error: productsError } = await supabase
+  .from("products")
+  .select("*", { count: "exact", head: true });
+
+const totalProducts = productsError ? 0 : (productsCount ?? 0);
+
+// Stock total real
+const { data: stockRows, error: stockError } = await supabase
+  .from("product_sizes")
+  .select("stock");
+
+const totalStockUnits = stockError
+  ? 0
+  : (stockRows ?? []).reduce((sum, item) => sum + (item.stock ?? 0), 0);
 ---
 
 <AdminLayout>
   <section class="flex flex-col gap-10">
-    <div>
-      <p class="text-xs uppercase tracking-[0.35em] text-zinc-500">
-        Neo.Nautz Admin
-      </p>
-      <h1
-        class="mt-3 text-3xl font-bold uppercase tracking-[0.22em] text-white md:text-4xl"
-      >
-        Dashboard
-      </h1>
-      <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">
-        Control products, users and requests from one place. This is the private
-        management area for the Neo.Nautz project.
-      </p>
+    <div
+      class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+    >
+      <div>
+        <p class="text-xs uppercase tracking-[0.35em] text-zinc-500">
+          Neo.Nautz Admin
+        </p>
+        <h1
+          class="mt-3 text-3xl font-bold uppercase tracking-[0.22em] text-white md:text-4xl"
+        >
+          Dashboard
+        </h1>
+        <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">
+          Control products, users and requests from one place. This is the
+          private management area for the Neo.Nautz project.
+        </p>
+      </div>
+
+      <div class="border border-zinc-800 bg-zinc-950 px-5 py-4">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-zinc-500">
+          Logged in as
+        </p>
+        <p class="mt-2 text-sm text-white">{user.email}</p>
+        <p class="mt-1 text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+          Role: {profile.role}
+        </p>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
       <article class="border border-zinc-800 bg-zinc-950 p-6">
         <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Products</p>
-        <p class="mt-4 text-4xl font-bold text-white">3</p>
-        <p class="mt-2 text-sm text-zinc-400">Current drop items published.</p>
+        <p class="mt-4 text-4xl font-bold text-white">{totalProducts}</p>
+        <p class="mt-2 text-sm text-zinc-400">Current products in database.</p>
       </article>
 
       <article class="border border-zinc-800 bg-zinc-950 p-6">
-        <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Users</p>
-        <p class="mt-4 text-4xl font-bold text-white">0</p>
-        <p class="mt-2 text-sm text-zinc-400">Registered customer accounts.</p>
+        <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
+          Stock Units
+        </p>
+        <p class="mt-4 text-4xl font-bold text-white">{totalStockUnits}</p>
+        <p class="mt-2 text-sm text-zinc-400">Total units available by size.</p>
       </article>
 
       <article class="border border-zinc-800 bg-zinc-950 p-6">
@@ -70,18 +125,18 @@ import AdminLayout from "../../layouts/AdminLayout.astro";
               Products
             </p>
             <p class="mt-2 text-sm text-zinc-300">
-              TEE V1, HOODIE V1 and CAP V1 are currently available in the
-              catalog structure.
+              The dashboard is now reading the total number of products directly
+              from Supabase.
             </p>
           </div>
 
           <div class="border border-zinc-800 bg-black p-4">
             <p class="text-xs uppercase tracking-[0.24em] text-zinc-500">
-              Stock Logic
+              Stock
             </p>
             <p class="mt-2 text-sm text-zinc-300">
-              Size selection and sold out behaviour are already connected on the
-              product pages.
+              Stock is now structured by product size for a real drop-based
+              e-commerce workflow.
             </p>
           </div>
 
@@ -90,8 +145,8 @@ import AdminLayout from "../../layouts/AdminLayout.astro";
               Next Step
             </p>
             <p class="mt-2 text-sm text-zinc-300">
-              Connect the dashboard to real authentication and database
-              management.
+              Build the products page and manage real stock entries from the
+              database.
             </p>
           </div>
         </div>
