@@ -1,106 +1,305 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import { createServerSupabaseClient } from "../lib/supabaseServer.js";
 
-/*
-  CAMBIA SOLO ESTAS 2 LÍNEAS CUANDO TENGAS LOS DATOS REALES
-  - VIP_EMAIL: correo real del cliente
-  - VIP_WHATSAPP: número completo con prefijo país, sin espacios ni símbolos
-    Ejemplo España: 34600111222
-*/
-const VIP_EMAIL = 'vip@neonautz.com';
-const VIP_WHATSAPP = '34600000000';
+const supabase = createServerSupabaseClient(Astro);
 
-const emailSubject = encodeURIComponent('VIP ACCESS REQUEST');
-const emailBody = encodeURIComponent(
-  `Hello Neo.Nautz,
+const VIP_WHATSAPP = "34600000000";
 
-I want VIP access for the next drop.
+const normalizeText = (value: FormDataEntryValue | null): string =>
+  String(value ?? "").trim();
 
-Name:
-Country:
-Interested product:
-Preferred size:
+let formError = "";
+let formSuccess = "";
 
-Thank you.`
-);
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+
+  const name = normalizeText(formData.get("name"));
+  const email = normalizeText(formData.get("email")).toLowerCase();
+  const phone = normalizeText(formData.get("phone"));
+  const country = normalizeText(formData.get("country"));
+  const interestedProduct = normalizeText(formData.get("interested_product"));
+  const preferredSize = normalizeText(formData.get("preferred_size"));
+  const contactMethod = normalizeText(formData.get("contact_method"));
+  const extraMessage = normalizeText(formData.get("message"));
+
+  if (!name || !email) {
+    formError = "Please complete the required fields.";
+  } else {
+    const subject = `VIP access request - ${contactMethod || "manual contact"}`;
+    const message = [
+      `VIP Access Request`,
+      ``,
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Phone: ${phone || "Not provided"}`,
+      `Country: ${country || "Not provided"}`,
+      `Interested product: ${interestedProduct || "Not provided"}`,
+      `Preferred size: ${preferredSize || "Not provided"}`,
+      `Preferred contact method: ${contactMethod || "Not provided"}`,
+      ``,
+      `Message:`,
+      extraMessage || "No additional message",
+    ].join("\n");
+
+    const { error } = await supabase.from("requests").insert({
+      type: "vip",
+      name,
+      email,
+      phone: phone || null,
+      subject,
+      message,
+      status: "new",
+    });
+
+    if (error) {
+      formError = error.message;
+    } else {
+      formSuccess = "VIP request sent successfully.";
+    }
+  }
+}
 
 const whatsappMessage = encodeURIComponent(
-  `Hello Neo.Nautz, I want VIP access for the next drop.
-
-Name:
-Country:
-Interested product:
-Preferred size:`
+  `Hello Neo.Nautz, I want VIP access for the next drop.`,
 );
 ---
 
 <Layout>
   <Navbar />
 
-  <section class="min-h-screen bg-black text-white px-6 pt-16 md:pt-20 pb-24 flex items-center">
-    <div class="max-w-4xl mx-auto text-center">
-      <p class="text-xs md:text-sm uppercase tracking-[0.35em] text-zinc-500">
-        Neo.Nautz Vip Access
-      </p>
+  <section class="min-h-screen bg-black px-6 pb-24 pt-16 text-white md:pt-20">
+    <div class="mx-auto max-w-5xl">
+      <div class="text-center">
+        <p class="text-xs uppercase tracking-[0.35em] text-zinc-500 md:text-sm">
+          Neo.Nautz Vip Access
+        </p>
 
-      <h1 class="mt-6 text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-[0.14em] leading-tight">
-        Early Access For The Next Drop
-      </h1>
+        <h1
+          class="mt-6 text-4xl font-bold uppercase leading-tight tracking-[0.14em] md:text-6xl lg:text-7xl"
+        >
+          Early Access For The Next Drop
+        </h1>
 
-      <p class="mt-8 max-w-2xl mx-auto text-sm md:text-base leading-8 text-zinc-400">
-        Vip access is reserved for people who want priority contact, early access to selected drops
-        and direct communication with the brand before public release.
-      </p>
-
-      <div class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-        <div class="border border-white/10 p-8 bg-zinc-950/30">
-          <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
-            Email Contact
-          </p>
-
-          <h2 class="mt-4 text-2xl md:text-3xl font-bold uppercase tracking-[0.12em]">
-            Request By Email
-          </h2>
-
-          <p class="mt-4 text-sm leading-7 text-zinc-400">
-            Send your name, country, product interest and preferred size to receive manual support
-            and availability details.
-          </p>
-
-          <a
-            href={`mailto:${VIP_EMAIL}?subject=${emailSubject}&body=${emailBody}`}
-            class="mt-8 inline-flex items-center justify-center border border-white px-6 py-3 text-xs md:text-sm uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black"
-          >
-            Email Vip
-          </a>
-        </div>
-
-        <div class="border border-white/10 p-8 bg-zinc-950/30">
-          <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
-            WhatsApp Contact
-          </p>
-
-          <h2 class="mt-4 text-2xl md:text-3xl font-bold uppercase tracking-[0.12em]">
-            Request By WhatsApp
-          </h2>
-
-          <p class="mt-4 text-sm leading-7 text-zinc-400">
-            Contact the brand directly for drop information, availability and private purchase requests.
-          </p>
-
-          <a
-            href={`https://wa.me/${VIP_WHATSAPP}?text=${whatsappMessage}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mt-8 inline-flex items-center justify-center border border-white px-6 py-3 text-xs md:text-sm uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black"
-          >
-            WhatsApp Vip
-          </a>
-        </div>
+        <p
+          class="mx-auto mt-8 max-w-2xl text-sm leading-8 text-zinc-400 md:text-base"
+        >
+          Vip access is reserved for people who want priority contact, early
+          access to selected drops and direct communication with the brand
+          before public release.
+        </p>
       </div>
 
-      <div class="mt-16 border-t border-white/10 pt-10">
+      {
+        (formError || formSuccess) && (
+          <div
+            class={`mx-auto mt-10 max-w-4xl border px-5 py-4 text-sm ${
+              formError
+                ? "border-red-500/40 bg-red-500/10 text-red-300"
+                : "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+            }`}
+          >
+            {formError || formSuccess}
+          </div>
+        )
+      }
+
+      <div class="mt-14 grid grid-cols-1 gap-8 xl:grid-cols-[1.1fr_0.9fr]">
+        <section class="border border-white/10 bg-zinc-950/30 p-8">
+          <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
+            VIP Request Form
+          </p>
+
+          <h2
+            class="mt-4 text-2xl font-bold uppercase tracking-[0.12em] md:text-3xl"
+          >
+            Request Access
+          </h2>
+
+          <p class="mt-4 text-sm leading-7 text-zinc-400">
+            Send your details and interest. Your request will be stored directly
+            in the admin panel for review.
+          </p>
+
+          <form
+            method="POST"
+            class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2"
+          >
+            <div class="flex flex-col gap-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Name *
+              </label>
+              <input
+                name="name"
+                type="text"
+                required
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                placeholder="Your name"
+              />
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Email *
+              </label>
+              <input
+                name="email"
+                type="email"
+                required
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                placeholder="your@email.com"
+              />
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Phone / WhatsApp
+              </label>
+              <input
+                name="phone"
+                type="text"
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                placeholder="+34 ..."
+              />
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Country
+              </label>
+              <input
+                name="country"
+                type="text"
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                placeholder="Spain"
+              />
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Interested Product
+              </label>
+              <input
+                name="interested_product"
+                type="text"
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                placeholder="TEE / HOODIE / CAP ..."
+              />
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Preferred Size
+              </label>
+              <input
+                name="preferred_size"
+                type="text"
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                placeholder="S / M / L / XL / One Size"
+              />
+            </div>
+
+            <div class="flex flex-col gap-2 md:col-span-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Preferred Contact Method
+              </label>
+              <select
+                name="contact_method"
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+              >
+                <option value="email">email</option>
+                <option value="whatsapp">whatsapp</option>
+                <option value="either">either</option>
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-2 md:col-span-2">
+              <label
+                class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
+              >
+                Extra Message
+              </label>
+              <textarea
+                name="message"
+                rows="5"
+                class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                placeholder="Tell us anything relevant about your request."
+              ></textarea>
+            </div>
+
+            <div class="md:col-span-2">
+              <button
+                type="submit"
+                class="w-full border border-white bg-white px-6 py-3 text-xs uppercase tracking-[0.28em] text-black transition-all duration-300 hover:bg-white/90"
+              >
+                Send VIP Request
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <aside class="flex flex-col gap-6">
+          <div class="border border-white/10 bg-zinc-950/30 p-8">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
+              Direct WhatsApp
+            </p>
+
+            <h2
+              class="mt-4 text-2xl font-bold uppercase tracking-[0.12em] md:text-3xl"
+            >
+              Contact By WhatsApp
+            </h2>
+
+            <p class="mt-4 text-sm leading-7 text-zinc-400">
+              If you prefer direct manual contact, you can still open WhatsApp
+              and message the brand instantly.
+            </p>
+
+            <a
+              href={`https://wa.me/${VIP_WHATSAPP}?text=${whatsappMessage}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-8 inline-flex items-center justify-center border border-white px-6 py-3 text-xs uppercase tracking-[0.28em] transition-all duration-300 hover:bg-white hover:text-black md:text-sm"
+            >
+              WhatsApp Vip
+            </a>
+          </div>
+
+          <div class="border border-white/10 bg-zinc-950/30 p-8">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">
+              Internal Workflow
+            </p>
+
+            <h2 class="mt-4 text-2xl font-bold uppercase tracking-[0.12em]">
+              Admin Review
+            </h2>
+
+            <p class="mt-4 text-sm leading-7 text-zinc-400">
+              All VIP requests sent through this form are stored automatically
+              in the admin panel so the brand can review, update status and
+              manage each case.
+            </p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="mt-16 border-t border-white/10 pt-10 text-center">
         <p class="text-xs uppercase tracking-[0.3em] text-zinc-600">
           Manual order system active for the current stage of the brand
         </p>

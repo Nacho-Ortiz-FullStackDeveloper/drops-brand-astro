@@ -2,43 +2,61 @@
 
 ---
 
-<header class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+<header
+  class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10"
+>
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-
     <!-- LOGO -->
-    <a href="/" class="text-white text-sm md:text-base tracking-[0.3em] font-medium uppercase hover:opacity-70 transition">
+    <a
+      href="/"
+      class="text-white text-sm md:text-base tracking-[0.3em] font-medium uppercase hover:opacity-70 transition"
+    >
       NEO.NAUTZ
     </a>
 
     <!-- MENU -->
-    <nav class="hidden md:flex items-center gap-10 text-xs tracking-[0.25em] uppercase text-gray-300">
-      <a href="/#drop">Drop</a>
-      <a href="/vip">VIP</a>
-  <a href="/about">About</a>
+    <nav
+      class="hidden md:flex items-center gap-10 text-xs tracking-[0.25em] uppercase text-gray-300"
+    >
+      <a href="/#drop" class="hover:text-white transition">Drop</a>
+      <a href="/vip" class="hover:text-white transition">VIP</a>
+      <a href="/about" class="hover:text-white transition">About</a>
     </nav>
 
-    <!-- BOTÓN DERECHA -->
-    <div class="hidden md:flex">
-    <a
-  href="/#drop"
-  class="border border-white px-4 py-2 text-xs uppercase tracking-[0.3em] transition hover:bg-white hover:text-black"
->
-  Shop
-</a>
+    <!-- DERECHA -->
+    <div class="hidden md:flex items-center gap-4">
+      <!-- ADMIN -->
+      <a
+        href="/admin"
+        class="text-xs uppercase tracking-[0.3em] text-gray-400 hover:text-white transition"
+      >
+        Admin
+      </a>
+
+      <!-- SHOP -->
+      <a
+        href="/#drop"
+        class="border border-white px-4 py-2 text-xs uppercase tracking-[0.3em] transition hover:bg-white hover:text-black"
+      >
+        Shop
+      </a>
     </div>
 
     <!-- MOBILE MENU BUTTON -->
-    <button id="menu-btn" class="md:hidden text-white">
-      ☰
-    </button>
-
+    <button id="menu-btn" class="md:hidden text-white text-lg"> ☰ </button>
   </div>
 
   <!-- MOBILE MENU -->
-  <div id="mobile-menu" class="hidden flex-col items-center gap-6 py-6 bg-black text-white text-sm tracking-widest uppercase border-t border-white/10">
-    <a href="#drop">Drop</a>
-    <a href="#">Vip</a>
-    <a href="#">About</a>
+  <div
+    id="mobile-menu"
+    class="hidden flex-col items-center gap-6 py-6 bg-black text-white text-sm tracking-widest uppercase border-t border-white/10"
+  >
+    <a href="/#drop">Drop</a>
+    <a href="/vip">VIP</a>
+    <a href="/about">About</a>
+
+    <!-- ADMIN MOBILE -->
+    <a href="/admin" class="text-gray-400">Admin</a>
   </div>
 
   <script is:inline>

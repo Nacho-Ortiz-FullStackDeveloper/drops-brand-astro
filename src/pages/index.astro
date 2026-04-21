@@ -1,36 +1,42 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import ProductCard from '../components/ProductCard.astro';
-import BehindTheDrop from '../components/BehindTheDrop.astro';
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import ProductCard from "../components/ProductCard.astro";
+import BehindTheDrop from "../components/BehindTheDrop.astro";
 
-import hoodie from '../assets/images/hoodie.png';
-import tee from '../assets/images/tee.png';
-import cap from '../assets/images/cap.png';
+import hoodie from "../assets/images/hoodie.png";
+import tee from "../assets/images/tee.png";
+import cap from "../assets/images/cap.png";
 
 /* CAMPAIGN IMAGES */
-import campaign01 from '../assets/campaign/drop-01.png';
-import campaign02 from '../assets/campaign/drop-02.png';
-import campaign03 from '../assets/campaign/drop-03.png';
-import campaign04 from '../assets/campaign/drop-04.png';
-import campaign05 from '../assets/campaign/drop-05.png';
-import campaign06 from '../assets/campaign/drop-06.png';
-import campaign07 from '../assets/campaign/drop-07.png';
-import campaign08 from '../assets/campaign/drop-08.png';
-import campaign09 from '../assets/campaign/drop-09.png';
+import campaign01 from "../assets/campaign/drop-01.png";
+import campaign02 from "../assets/campaign/drop-02.png";
+import campaign03 from "../assets/campaign/drop-03.png";
+import campaign04 from "../assets/campaign/drop-04.png";
+import campaign05 from "../assets/campaign/drop-05.png";
+import campaign06 from "../assets/campaign/drop-06.png";
+import campaign07 from "../assets/campaign/drop-07.png";
+import campaign08 from "../assets/campaign/drop-08.png";
+import campaign09 from "../assets/campaign/drop-09.png";
 ---
 
 <Layout>
   <Navbar />
 
   <!-- HERO -->
-  <section class="h-screen bg-black flex flex-col items-center justify-center text-white px-6">
+  <section
+    class="h-screen bg-black flex flex-col items-center justify-center text-white px-6"
+  >
     <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
-      <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-[0.12em] uppercase leading-none hover:tracking-[0.18em] transition-all duration-500">
+      <h1
+        class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-[0.12em] uppercase leading-none hover:tracking-[0.18em] transition-all duration-500"
+      >
         NEO.NAUTZ
       </h1>
 
-      <p class="mt-8 text-base md:text-xl uppercase tracking-[0.45em] text-zinc-300">
+      <p
+        class="mt-8 text-base md:text-xl uppercase tracking-[0.45em] text-zinc-300"
+      >
         Exclusive Drops
       </p>
 
@@ -45,12 +51,14 @@ import campaign09 from '../assets/campaign/drop-09.png';
         <p
           id="countdown"
           class="text-base md:text-xl font-medium uppercase tracking-[0.22em] text-white"
-        ></p>
+        >
+        </p>
 
         <p
           id="local-drop-time"
           class="text-xs md:text-sm uppercase tracking-[0.28em] text-zinc-500"
-        ></p>
+        >
+        </p>
 
         <a
           href="/vip"
@@ -109,22 +117,24 @@ import campaign09 from '../assets/campaign/drop-09.png';
     title="BEHIND THE DROP"
     subtitle="Campaign visuals from the current release."
     images={[
-      { image: campaign01, alt: 'Campaign shot 1' },
-      { image: campaign02, alt: 'Campaign shot 2' },
-      { image: campaign03, alt: 'Campaign shot 3' },
-      { image: campaign04, alt: 'Campaign shot 4' },
-      { image: campaign05, alt: 'Campaign shot 5' },
-      { image: campaign06, alt: 'Campaign shot 6' },
-      { image: campaign07, alt: 'Campaign shot 7' },
-      { image: campaign08, alt: 'Campaign shot 8' },
-      { image: campaign09, alt: 'Campaign shot 9' },
+      { image: campaign01, alt: "Campaign shot 1" },
+      { image: campaign02, alt: "Campaign shot 2" },
+      { image: campaign03, alt: "Campaign shot 3" },
+      { image: campaign04, alt: "Campaign shot 4" },
+      { image: campaign05, alt: "Campaign shot 5" },
+      { image: campaign06, alt: "Campaign shot 6" },
+      { image: campaign07, alt: "Campaign shot 7" },
+      { image: campaign08, alt: "Campaign shot 8" },
+      { image: campaign09, alt: "Campaign shot 9" },
     ]}
   />
 
   <!-- DROP -->
   <section id="drop" class="bg-black text-white py-24 px-6">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl md:text-5xl font-bold text-center uppercase tracking-[0.18em] mb-16">
+      <h2
+        class="text-3xl md:text-5xl font-bold text-center uppercase tracking-[0.18em] mb-16"
+      >
         Latest Drop
       </h2>
 
