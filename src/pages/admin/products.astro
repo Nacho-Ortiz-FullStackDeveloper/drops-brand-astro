@@ -1,13 +1,14 @@
 ---
 import AdminLayout from "../../layouts/AdminLayout.astro";
 import { createServerSupabaseClient } from "../../lib/supabaseServer.js";
+import { uploadProductImage } from "../../lib/storage";
 
 type Product = {
   id: string;
   name: string;
   price: number;
   description: string;
-  image: string;
+  image: string | null;
   created_at: string | null;
 };
 
@@ -64,7 +65,7 @@ if (Astro.request.method === "POST") {
     const name = normalizeText(formData.get("name"));
     const priceRaw = normalizeText(formData.get("price"));
     const description = normalizeText(formData.get("description"));
-    const image = normalizeText(formData.get("image"));
+    const imageFile = formData.get("imageFile");
 
     const stockS = parseStock(formData.get("stock_s"));
     const stockM = parseStock(formData.get("stock_m"));
@@ -75,54 +76,72 @@ if (Astro.request.method === "POST") {
 
     const price = Number.parseFloat(priceRaw);
 
-    if (!name || !description || !image || Number.isNaN(price)) {
+    if (!name || !description || Number.isNaN(price)) {
       formError = "Complete all required product fields correctly.";
     } else {
-      const { data: insertedProduct, error: insertProductError } =
-        await supabase
-          .from("products")
-          .insert({
-            name,
-            price,
-            description,
-            image,
-          })
-          .select()
-          .single();
+      let imageUrl: string | null = null;
 
-      if (insertProductError || !insertedProduct) {
-        formError = insertProductError?.message ?? "Could not create product.";
-      } else {
-        const sizeRows: Array<{
-          product_id: string;
-          size: string;
-          stock: number;
-        }> = [];
-
-        if (stockOneSize > 0) {
-          sizeRows.push({
-            product_id: insertedProduct.id,
-            size: "One Size",
-            stock: stockOneSize,
-          });
+      try {
+        if (imageFile instanceof File && imageFile.size > 0) {
+          imageUrl = await uploadProductImage(supabase, imageFile);
         } else {
-          sizeRows.push(
-            { product_id: insertedProduct.id, size: "S", stock: stockS },
-            { product_id: insertedProduct.id, size: "M", stock: stockM },
-            { product_id: insertedProduct.id, size: "L", stock: stockL },
-            { product_id: insertedProduct.id, size: "XL", stock: stockXL },
-            { product_id: insertedProduct.id, size: "XXL", stock: stockXXL },
-          );
+          formError = "Please upload a product image.";
         }
+      } catch (error) {
+        formError =
+          error instanceof Error
+            ? error.message
+            : "Could not upload product image.";
+      }
 
-        const { error: insertSizesError } = await supabase
-          .from("product_sizes")
-          .insert(sizeRows);
+      if (!formError) {
+        const { data: insertedProduct, error: insertProductError } =
+          await supabase
+            .from("products")
+            .insert({
+              name,
+              price,
+              description,
+              image: imageUrl,
+            })
+            .select()
+            .single();
 
-        if (insertSizesError) {
-          formError = insertSizesError.message;
+        if (insertProductError || !insertedProduct) {
+          formError =
+            insertProductError?.message ?? "Could not create product.";
         } else {
-          formSuccess = "Product created successfully.";
+          const sizeRows: Array<{
+            product_id: string;
+            size: string;
+            stock: number;
+          }> = [];
+
+          if (stockOneSize > 0) {
+            sizeRows.push({
+              product_id: insertedProduct.id,
+              size: "One Size",
+              stock: stockOneSize,
+            });
+          } else {
+            sizeRows.push(
+              { product_id: insertedProduct.id, size: "S", stock: stockS },
+              { product_id: insertedProduct.id, size: "M", stock: stockM },
+              { product_id: insertedProduct.id, size: "L", stock: stockL },
+              { product_id: insertedProduct.id, size: "XL", stock: stockXL },
+              { product_id: insertedProduct.id, size: "XXL", stock: stockXXL },
+            );
+          }
+
+          const { error: insertSizesError } = await supabase
+            .from("product_sizes")
+            .insert(sizeRows);
+
+          if (insertSizesError) {
+            formError = insertSizesError.message;
+          } else {
+            formSuccess = "Product created successfully.";
+          }
         }
       }
     }
@@ -133,7 +152,8 @@ if (Astro.request.method === "POST") {
     const name = normalizeText(formData.get("name"));
     const priceRaw = normalizeText(formData.get("price"));
     const description = normalizeText(formData.get("description"));
-    const image = normalizeText(formData.get("image"));
+    const currentImage = normalizeText(formData.get("currentImage"));
+    const imageFile = formData.get("imageFile");
 
     const stockS = parseStock(formData.get("stock_s"));
     const stockM = parseStock(formData.get("stock_m"));
@@ -144,65 +164,81 @@ if (Astro.request.method === "POST") {
 
     const price = Number.parseFloat(priceRaw);
 
-    if (!productId || !name || !description || !image || Number.isNaN(price)) {
+    if (!productId || !name || !description || Number.isNaN(price)) {
       formError = "Complete all required edit fields correctly.";
       editingProductId = productId;
     } else {
-      const { error: updateProductError } = await supabase
-        .from("products")
-        .update({
-          name,
-          price,
-          description,
-          image,
-        })
-        .eq("id", productId);
+      let imageUrl = currentImage || null;
 
-      if (updateProductError) {
-        formError = updateProductError.message;
+      try {
+        if (imageFile instanceof File && imageFile.size > 0) {
+          imageUrl = await uploadProductImage(supabase, imageFile);
+        }
+      } catch (error) {
+        formError =
+          error instanceof Error
+            ? error.message
+            : "Could not upload new product image.";
         editingProductId = productId;
-      } else {
-        const { error: deleteSizesError } = await supabase
-          .from("product_sizes")
-          .delete()
-          .eq("product_id", productId);
+      }
 
-        if (deleteSizesError) {
-          formError = deleteSizesError.message;
+      if (!formError) {
+        const { error: updateProductError } = await supabase
+          .from("products")
+          .update({
+            name,
+            price,
+            description,
+            image: imageUrl,
+          })
+          .eq("id", productId);
+
+        if (updateProductError) {
+          formError = updateProductError.message;
           editingProductId = productId;
         } else {
-          const sizeRows: Array<{
-            product_id: string;
-            size: string;
-            stock: number;
-          }> = [];
-
-          if (stockOneSize > 0) {
-            sizeRows.push({
-              product_id: productId,
-              size: "One Size",
-              stock: stockOneSize,
-            });
-          } else {
-            sizeRows.push(
-              { product_id: productId, size: "S", stock: stockS },
-              { product_id: productId, size: "M", stock: stockM },
-              { product_id: productId, size: "L", stock: stockL },
-              { product_id: productId, size: "XL", stock: stockXL },
-              { product_id: productId, size: "XXL", stock: stockXXL },
-            );
-          }
-
-          const { error: insertUpdatedSizesError } = await supabase
+          const { error: deleteSizesError } = await supabase
             .from("product_sizes")
-            .insert(sizeRows);
+            .delete()
+            .eq("product_id", productId);
 
-          if (insertUpdatedSizesError) {
-            formError = insertUpdatedSizesError.message;
+          if (deleteSizesError) {
+            formError = deleteSizesError.message;
             editingProductId = productId;
           } else {
-            formSuccess = "Product updated successfully.";
-            editingProductId = "";
+            const sizeRows: Array<{
+              product_id: string;
+              size: string;
+              stock: number;
+            }> = [];
+
+            if (stockOneSize > 0) {
+              sizeRows.push({
+                product_id: productId,
+                size: "One Size",
+                stock: stockOneSize,
+              });
+            } else {
+              sizeRows.push(
+                { product_id: productId, size: "S", stock: stockS },
+                { product_id: productId, size: "M", stock: stockM },
+                { product_id: productId, size: "L", stock: stockL },
+                { product_id: productId, size: "XL", stock: stockXL },
+                { product_id: productId, size: "XXL", stock: stockXXL },
+              );
+            }
+
+            const { error: insertUpdatedSizesError } = await supabase
+              .from("product_sizes")
+              .insert(sizeRows);
+
+            if (insertUpdatedSizesError) {
+              formError = insertUpdatedSizesError.message;
+              editingProductId = productId;
+            } else {
+              formSuccess = "Product updated successfully.";
+              editingProductId = "";
+            }
           }
         }
       }
@@ -322,7 +358,11 @@ const getSizeValue = (productId: string, sizeName: string): number => {
         Add New Item
       </h2>
 
-      <form method="POST" class="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-2">
+      <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-2"
+      >
         <input type="hidden" name="actionType" value="createProduct" />
 
         <div class="flex flex-col gap-4">
@@ -356,14 +396,14 @@ const getSizeValue = (productId: string, sizeName: string): number => {
 
           <div class="flex flex-col gap-2">
             <label class="text-[10px] uppercase tracking-[0.28em] text-zinc-500"
-              >Image URL</label
+              >Product Image</label
             >
             <input
-              name="image"
-              type="text"
+              name="imageFile"
+              type="file"
+              accept="image/*"
               required
-              class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
-              placeholder="https://... or /images/product.jpg"
+              class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white file:mr-4 file:border-0 file:bg-white file:px-4 file:py-2 file:text-xs file:uppercase file:tracking-[0.22em] file:text-black"
             />
           </div>
         </div>
@@ -573,7 +613,11 @@ const getSizeValue = (productId: string, sizeName: string): number => {
                           Edit Product
                         </p>
 
-                        <form method="POST" class="mt-4 flex flex-col gap-4">
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          class="mt-4 flex flex-col gap-4"
+                        >
                           <input
                             type="hidden"
                             name="actionType"
@@ -583,6 +627,11 @@ const getSizeValue = (productId: string, sizeName: string): number => {
                             type="hidden"
                             name="productId"
                             value={product.id}
+                          />
+                          <input
+                            type="hidden"
+                            name="currentImage"
+                            value={product.image ?? ""}
                           />
 
                           <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -617,14 +666,22 @@ const getSizeValue = (productId: string, sizeName: string): number => {
 
                           <div class="flex flex-col gap-2">
                             <label class="text-[10px] uppercase tracking-[0.28em] text-zinc-500">
-                              Image URL
+                              Current Image
+                            </label>
+                            <p class="break-all text-xs text-zinc-400">
+                              {product.image || "No image"}
+                            </p>
+                          </div>
+
+                          <div class="flex flex-col gap-2">
+                            <label class="text-[10px] uppercase tracking-[0.28em] text-zinc-500">
+                              Replace Image
                             </label>
                             <input
-                              name="image"
-                              type="text"
-                              value={product.image}
-                              required
-                              class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
+                              name="imageFile"
+                              type="file"
+                              accept="image/*"
+                              class="border border-zinc-700 bg-black px-4 py-3 text-sm text-white file:mr-4 file:border-0 file:bg-white file:px-4 file:py-2 file:text-xs file:uppercase file:tracking-[0.22em] file:text-black"
                             />
                           </div>
 

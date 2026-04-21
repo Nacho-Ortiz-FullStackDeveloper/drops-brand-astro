@@ -1,4 +1,17 @@
-<aside class="w-64 min-h-screen border-r border-zinc-800 bg-zinc-950 px-6 py-8 flex flex-col">
+---
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { href: "/admin", label: "Dashboard" },
+  { href: "/admin/products", label: "Products" },
+  { href: "/admin/users", label: "Users" },
+  { href: "/admin/requests", label: "Requests" },
+];
+---
+
+<aside
+  class="w-64 min-h-screen border-r border-zinc-800 bg-zinc-950 px-6 py-8 flex flex-col"
+>
   <div class="mb-10">
     <p class="text-xs uppercase tracking-[0.35em] text-zinc-500">Admin Panel</p>
     <h2 class="mt-3 text-2xl font-bold uppercase tracking-[0.28em] text-white">
@@ -6,34 +19,27 @@
     </h2>
   </div>
 
-  <nav class="flex flex-col gap-3 text-sm uppercase tracking-[0.22em] text-zinc-400">
-    <a
-      href="/admin"
-      class="rounded-none border border-transparent px-4 py-3 transition hover:border-zinc-700 hover:text-white"
-    >
-      Dashboard
-    </a>
+  <nav
+    class="flex flex-col gap-3 text-sm uppercase tracking-[0.22em] text-zinc-400"
+  >
+    {
+      navItems.map((item) => {
+        const isActive = currentPath === item.href;
 
-    <a
-      href="/admin/products"
-      class="rounded-none border border-transparent px-4 py-3 transition hover:border-zinc-700 hover:text-white"
-    >
-      Products
-    </a>
-
-    <a
-      href="/admin/users"
-      class="rounded-none border border-transparent px-4 py-3 transition hover:border-zinc-700 hover:text-white"
-    >
-      Users
-    </a>
-
-    <a
-      href="/admin/requests"
-      class="rounded-none border border-transparent px-4 py-3 transition hover:border-zinc-700 hover:text-white"
-    >
-      Requests
-    </a>
+        return (
+          <a
+            href={item.href}
+            class={`rounded-none border px-4 py-3 transition ${
+              isActive
+                ? "border-white text-white bg-black"
+                : "border-transparent hover:border-zinc-700 hover:text-white"
+            }`}
+          >
+            {item.label}
+          </a>
+        );
+      })
+    }
   </nav>
 
   <div
@@ -41,7 +47,8 @@
     data-url={import.meta.env.PUBLIC_SUPABASE_URL}
     data-key={import.meta.env.PUBLIC_SUPABASE_ANON_KEY}
     hidden
-  ></div>
+  >
+  </div>
 
   <div class="mt-auto pt-10">
     <button
@@ -55,35 +62,35 @@
 </aside>
 
 <script>
-  import { createBrowserClient } from '@supabase/ssr';
+  import { createBrowserClient } from "@supabase/ssr";
 
-  const configEl = document.getElementById('supabase-logout-config');
-  const logoutButton = document.getElementById('logout-button');
+  const configEl = document.getElementById("supabase-logout-config");
+  const logoutButton = document.getElementById("logout-button");
 
   if (
     !(configEl instanceof HTMLElement) ||
     !(logoutButton instanceof HTMLButtonElement)
   ) {
-    throw new Error('Logout setup failed');
+    throw new Error("Logout setup failed");
   }
 
   const supabaseUrl = configEl.dataset.url;
   const supabaseKey = configEl.dataset.key;
 
   if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Missing Supabase environment variables');
+    throw new Error("Missing Supabase environment variables");
   }
 
   const supabase = createBrowserClient(supabaseUrl, supabaseKey);
 
-  logoutButton.addEventListener('click', async () => {
+  logoutButton.addEventListener("click", async () => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      console.error('Logout error:', error.message);
+      console.error("Logout error:", error.message);
       return;
     }
 
-    window.location.href = '/admin/login';
+    window.location.href = "/admin/login";
   });
 </script>
